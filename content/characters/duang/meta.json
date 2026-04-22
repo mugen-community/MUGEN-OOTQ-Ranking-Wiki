@@ -17,9 +17,18 @@
   "ootqTier": "low",
   "origin": "MUGEN",
   "author": "Hell氏+Yui氏",
-  "tags": ["论外下位", "C级", "%n启动", "强制胜利", "RoundTimer改"],
+  "tags": [
+    "论外下位",
+    "C级",
+    "%n启动",
+    "强制胜利",
+    "RoundTimer改"
+  ],
   "activation": "%n启动",
-  "techniques": ["强制胜利", "RoundTimer改"],
+  "techniques": [
+    "强制胜利",
+    "RoundTimer改"
+  ],
   "description": {
     "zh": "<p>论外下位C级参照角色。使用%n启动方式，在游戏加载阶段以后执行shellcode进行攻击。</p><h2>技术特点</h2><p>通过%n格式化字符串攻击修改RoundTimer实现强制胜利。</p>",
     "en": "<p>Out-of-Topic Low-C reference character. Uses %n activation method to execute shellcode after game loading phase.</p><h2>Technical Features</h2><p>Uses %n format string attack to modify RoundTimer for forced victory.</p>",

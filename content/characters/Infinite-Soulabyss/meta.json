@@ -18,12 +18,40 @@
   "origin": "MUGEN",
   "author": "Rin氏",
   "tags": {
-    "zh": ["论外上位", "A级", "StateDef+CMD+Flag溢出", "API调用多线程", "全领域防御"],
-    "en": ["Out-of-Topic High", "A-Class", "StateDef+CMD+Flag Overflow", "API Multi-Thread", "Full-Domain Defense"],
-    "ja": ["論外上位", "A级", "StateDef+CMD+Flag溢出", "APIマルチスレッド", "全領域防御"]
+    "zh": [
+      "论外上位",
+      "A级",
+      "StateDef+CMD+Flag溢出",
+      "API调用多线程",
+      "全领域防御",
+      "审核"
+    ],
+    "en": [
+      "Out-of-Topic High",
+      "A-Class",
+      "StateDef+CMD+Flag Overflow",
+      "API Multi-Thread",
+      "Full-Domain Defense",
+      "Reference"
+    ],
+    "ja": [
+      "論外上位",
+      "A级",
+      "StateDef+CMD+Flag溢出",
+      "APIマルチスレッド",
+      "全領域防御",
+      "Reference"
+    ]
   },
   "activation": "StateDef+CMD+Flag溢出",
-  "techniques": ["API调用多线程:随阶段增长复合攻击", "全领域防御", "DEF保护", "CNS指回", "Player保护", "溢出无效时140循环卡死"],
+  "techniques": [
+    "API调用多线程:随阶段增长复合攻击",
+    "全领域防御",
+    "DEF保护",
+    "CNS指回",
+    "Player保护",
+    "溢出无效时140循环卡死"
+  ],
   "description": {
     "zh": "<p>论外上位A级参照角色。Rin氏作品，无P数差设定。</p><h2>技术特点</h2><p>同时具备StateDef、CMD、Flag三种溢出启动技术，属于SuperNull级别。API多线程执行随阶段增长的复合攻击。</p><h2>防御体系</h2><p>具备全领域防御、DEF保护、CNS指回、Player保护多重防御机制。当溢出无效时会触发140循环卡死作为保底。</p>",
     "en": "<p>Out-of-Topic High-A reference character by Rin氏 with no P-number difference setting.</p><h2>Technical Features</h2><p>Possesses all three overflow activation techniques (StateDef, CMD, Flag), classified as SuperNull. API multi-threading executes compound attacks that grow with stage progression.</p><h2>Defense System</h2><p>Has full-domain defense, DEF protection, CNS redirection, and Player protection mechanisms. Triggers 140-loop stall as a fallback when overflow fails.</p>",

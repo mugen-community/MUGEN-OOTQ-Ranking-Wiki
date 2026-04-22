@@ -18,12 +18,35 @@
   "origin": "MUGEN",
   "author": "熄废人氏",
   "tags": {
-    "zh": ["论外下位", "A级", "%N启动", "DTC型亲捏造", "阶段增长"],
-    "en": ["Out-of-Topic Low", "A-Class", "%N Activation", "DTC Parent-Fabrication", "Stage Growth"],
-    "ja": ["論外下位", "A级", "%N起動", "DTC型親捏造", "段階成長"]
+    "zh": [
+      "论外下位",
+      "A级",
+      "%N启动",
+      "DTC型亲捏造",
+      "阶段增长",
+      "审核"
+    ],
+    "en": [
+      "Out-of-Topic Low",
+      "A-Class",
+      "%N Activation",
+      "DTC Parent-Fabrication",
+      "Stage Growth",
+      "Reference"
+    ],
+    "ja": [
+      "論外下位",
+      "A级",
+      "%N起動",
+      "DTC型親捏造",
+      "段階成長",
+      "Reference"
+    ]
   },
   "activation": "%N启动",
-  "techniques": ["DTC型亲捏造:随阶段增长复合攻击"],
+  "techniques": [
+    "DTC型亲捏造:随阶段增长复合攻击"
+  ],
   "description": {
     "zh": "<p>论外下位A参照角色。熄废人氏作品，无P数差设定。</p><h2>技术特点</h2><p>使用DTC型亲捏造技术，攻击随游戏阶段增长而增强，形成复合攻击体系。</p>",
     "en": "<p>Out-of-Topic Low-A reference character by 熄废人氏 with no P-number difference setting.</p><h2>Technical Features</h2><p>Uses DTC parent-fabrication technique; attacks intensify with game stage progression, forming a compound attack system.</p>",

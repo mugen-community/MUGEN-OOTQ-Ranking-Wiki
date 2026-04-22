@@ -3,31 +3,73 @@
   <p class="lead">所有已收录的角色列表</p>
 </div>
 
-<div class="card-grid">
-  <% characters.forEach(char => { %>
-    <a class="card char-card" href="<%= r('') %><%= char.slug %>/">
-      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
-        <h3 class="char-title" style="margin:0;"><%= getField(char.meta.title, 'zh') %></h3>
-        <% if (char.meta.ootqLevel) { %>
-          <span class="ootq-badge ootq-<%= char.meta.ootqTier || 'low' %> char-ootq"><%= getField(char.meta.ootqLevel, 'zh') %></span>
-        <% } %>
-      </div>
-      <% if (char.meta.summary) { %>
-        <p class="char-summary"><%= getField(char.meta.summary, 'zh') %></p>
-      <% } %>
-      <% const tagsArr = Array.isArray(char.meta.tags) ? char.meta.tags : (char.meta.tags.zh || []); %>
-      <% if (tagsArr.length) { %>
-        <div class="tags char-tags">
-          <% tagsArr.slice(0, 4).forEach(tag => { %>
-            <span class="tag"><%= getField(tag, 'zh') %></span>
-          <% }); %>
-        </div>
-      <% } %>
-    </a>
-  <% }); %>
-  <% if (characters.length === 0) { %>
-    <div class="empty-state">
-      <p data-i18n="noContent">暂无角色</p>
+<%
+const tierOrder = { top: 0, high: 1, mid: 2, low: 3 };
+const levelOrder = { 'A': 0, 'B': 1, 'C': 2 };
+const sorted = [...characters].sort((a, b) => {
+  const ta = a.meta.ootqTier || 'low';
+  const tb = b.meta.ootqTier || 'low';
+  if (tierOrder[ta] !== tierOrder[tb]) return tierOrder[ta] - tierOrder[tb];
+  const la = (a.meta.ootqLevel?.zh || '').slice(-1);
+  const lb = (b.meta.ootqLevel?.zh || '').slice(-1);
+  return (levelOrder[la] || 0) - (levelOrder[lb] || 0);
+});
+
+const groups = {};
+sorted.forEach(char => {
+  const tier = char.meta.ootqTier || 'low';
+  const level = char.meta.ootqLevel?.zh || tier;
+  if (!groups[tier]) groups[tier] = [];
+  groups[tier].push(char);
+});
+
+const tierNames = { top: '论外最上位', high: '论外上位', mid: '论外中位', low: '论外下位' };
+%>
+
+<% Object.keys(groups).forEach(tier => { %>
+  <div class="tier-section">
+    <h2 class="tier-header"><%= tierNames[tier] || tier %></h2>
+    <div class="card-grid">
+      <% groups[tier].forEach(char => { %>
+        <a class="card char-card" href="<%= r('') %><%= char.slug %>/">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+            <h3 class="char-title" data-lang='<%= JSON.stringify(char.meta.title).replace(/'/g, "\\'") %>'><%= getField(char.meta.title, 'zh') %></h3>
+            <% if (char.meta.ootqLevel) { %>
+              <span class="ootq-badge ootq-<%= tier %> char-ootq" data-lang='<%= JSON.stringify(char.meta.ootqLevel).replace(/'/g, "\\'") %>'><%= getField(char.meta.ootqLevel, 'zh') %></span>
+            <% } %>
+          </div>
+          <% if (char.meta.summary) { %>
+            <p class="char-summary" data-lang='<%= JSON.stringify(char.meta.summary).replace(/'/g, "\\'") %>'><%= getField(char.meta.summary, 'zh') %></p>
+          <% } %>
+          <% const tagsArr = Array.isArray(char.meta.tags) ? char.meta.tags : (char.meta.tags.zh || []); %>
+          <% if (tagsArr.length) { %>
+            <div class="tags" style="margin-top:8px;">
+              <% tagsArr.slice(0, 4).forEach(tag => { %>
+                <span class="tag"><%= getField(tag, 'zh') %></span>
+              <% }); %>
+            </div>
+          <% } %>
+        </a>
+      <% }); %>
     </div>
-  <% } %>
-</div>
+  </div>
+<% }); %>
+
+<% if (characters.length === 0) { %>
+  <div class="empty-state">
+    <p data-i18n="noContent">暂无角色</p>
+  </div>
+<% } %>
+
+<style>
+.tier-section {
+  margin: 30px 0;
+}
+.tier-header {
+  font-size: 1.2em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+}
+</style>

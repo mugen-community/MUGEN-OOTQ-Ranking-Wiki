@@ -5,29 +5,53 @@
   </div>
 </div>
 
+<%
+const tierOrder = { top: 0, high: 1, mid: 2, low: 3 };
+const levelOrder = { 'A': 0, 'B': 1, 'C': 2 };
+const sorted = [...characters].sort((a, b) => {
+  const ta = a.meta.ootqTier || 'low';
+  const tb = b.meta.ootqTier || 'low';
+  if (tierOrder[ta] !== tierOrder[tb]) return tierOrder[ta] - tierOrder[tb];
+  const la = (a.meta.ootqLevel?.zh || '').slice(-1);
+  const lb = (b.meta.ootqLevel?.zh || '').slice(-1);
+  return (levelOrder[la] || 0) - (levelOrder[lb] || 0);
+});
+
+const groups = {};
+sorted.forEach(char => {
+  const tier = char.meta.ootqTier || 'low';
+  if (!groups[tier]) groups[tier] = [];
+  groups[tier].push(char);
+});
+
+const tierNames = { top: '论外最上位', high: '论外上位', mid: '论外中位', low: '论外下位' };
+const tierNamesEn = { top: 'Top', high: 'High', mid: 'Mid', low: 'Low' };
+%>
+
 <section class="section">
   <div class="section-header">
     <h2 data-i18n="characters">角色</h2>
     <a href="<%= r('characters/') %>" style="font-size:0.9em;">查看全部 →</a>
   </div>
-  <div class="card-grid" id="charactersGrid">
-    <% characters.forEach((char, idx) => { %>
-      <a class="card char-card" href="<%= r('characters/') %><%= char.slug %>/">
-        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
-          <h3 class="char-title" data-lang='<%= JSON.stringify(char.meta.title).replace(/'/g, "\\'") %>'><%= getField(char.meta.title, 'zh') %></h3>
-          <% if (char.meta.ootqLevel) { %>
-            <span class="ootq-badge ootq-<%= char.meta.ootqTier || 'low' %> char-ootq" data-lang='<%= JSON.stringify(char.meta.ootqLevel).replace(/'/g, "\\'") %>'><%= getField(char.meta.ootqLevel, 'zh') %></span>
-          <% } %>
-        </div>
-        <p class="char-summary" data-lang='<%= JSON.stringify(char.meta.summary).replace(/'/g, "\\'") %>'><%= getField(char.meta.summary, 'zh') %></p>
-      </a>
-    <% }); %>
-    <% if (characters.length === 0) { %>
-      <div class="empty-state">
-        <p data-i18n="noContent">暂无角色</p>
+
+  <% Object.keys(groups).forEach(tier => { %>
+    <div class="home-tier-section">
+      <h3 class="home-tier-header"><%= tierNames[tier] || tier %></h3>
+      <div class="card-grid">
+        <% groups[tier].forEach(char => { %>
+          <a class="card char-card" href="<%= r('characters/') %><%= char.slug %>/">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+              <h3 class="char-title" data-lang='<%= JSON.stringify(char.meta.title).replace(/'/g, "\\'") %>'><%= getField(char.meta.title, 'zh') %></h3>
+              <% if (char.meta.ootqLevel) { %>
+                <span class="ootq-badge ootq-<%= tier %> char-ootq" data-lang='<%= JSON.stringify(char.meta.ootqLevel).replace(/'/g, "\\'") %>'><%= getField(char.meta.ootqLevel, 'zh') %></span>
+              <% } %>
+            </div>
+            <p class="char-summary" data-lang='<%= JSON.stringify(char.meta.summary).replace(/'/g, "\\'") %>'><%= getField(char.meta.summary, 'zh') %></p>
+          </a>
+        <% }); %>
       </div>
-    <% } %>
-  </div>
+    </div>
+  <% }); %>
 </section>
 
 <section class="section">
@@ -51,3 +75,15 @@
     <% } %>
   </div>
 </section>
+
+<style>
+.home-tier-section {
+  margin: 20px 0;
+}
+.home-tier-header {
+  font-size: 1em;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  font-weight: normal;
+}
+</style>
