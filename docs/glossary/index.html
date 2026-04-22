@@ -46,7 +46,7 @@
 
 <div class="list-container" id="listContainer" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
   
-    <a class="card term-card" href="ootq/" data-tags='[]' data-techs='[]' style="display:flex;flex-direction:column;padding:16px;">
+    <a class="card term-card" href="ootq/" data-tags='[]' data-act='' data-techs='[]' style="display:flex;flex-direction:column;padding:16px;">
       
       <div class="card-header">
         <h3 class="card-title" data-lang='{&#34;zh&#34;:&#34;OOTQ&#34;,&#34;en&#34;:&#34;OOTQ&#34;,&#34;ja&#34;:&#34;OOTQ&#34;}'>OOTQ</h3>
@@ -58,7 +58,7 @@
       
     </a>
   
-    <a class="card term-card" href="parent-fabrication/" data-tags='[]' data-techs='[]' style="display:flex;flex-direction:column;padding:16px;">
+    <a class="card term-card" href="parent-fabrication/" data-tags='[]' data-act='' data-techs='[]' style="display:flex;flex-direction:column;padding:16px;">
       
       <div class="card-header">
         <h3 class="card-title" data-lang='{&#34;zh&#34;:&#34;亲捏造&#34;,&#34;en&#34;:&#34;Parent-Fabrication&#34;,&#34;ja&#34;:&#34;親捏造&#34;}'>亲捏造</h3>
@@ -70,7 +70,7 @@
       
     </a>
   
-    <a class="card term-card" href="shellcode/" data-tags='[]' data-techs='[]' style="display:flex;flex-direction:column;padding:16px;">
+    <a class="card term-card" href="shellcode/" data-tags='[]' data-act='' data-techs='[]' style="display:flex;flex-direction:column;padding:16px;">
       
       <div class="card-header">
         <h3 class="card-title" data-lang='{&#34;zh&#34;:&#34;Shellcode&#34;,&#34;en&#34;:&#34;Shellcode&#34;,&#34;ja&#34;:&#34;Shellcode&#34;}'>Shellcode</h3>
@@ -156,12 +156,22 @@
 
 <script>
 let currentTag = 'all';
+let currentAct = 'all';
 let currentTech = 'all';
 
 document.querySelectorAll('#tagFilter .tag-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     currentTag = btn.dataset.tag;
     document.querySelectorAll('#tagFilter .tag-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterCards();
+  });
+});
+
+document.querySelectorAll('#activationFilter .tag-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentAct = btn.dataset.act;
+    document.querySelectorAll('#activationFilter .tag-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     filterCards();
   });
@@ -179,10 +189,12 @@ document.querySelectorAll('#techFilter .tag-btn').forEach(btn => {
 function filterCards() {
   document.querySelectorAll('#listContainer .card').forEach(card => {
     const tags = JSON.parse(card.dataset.tags || '[]');
+    const act = card.dataset.act || '';
     const techs = JSON.parse(card.dataset.techs || '[]');
     const tagMatch = currentTag === 'all' || tags.includes(currentTag);
+    const actMatch = currentAct === 'all' || act === currentAct;
     const techMatch = currentTech === 'all' || techs.includes(currentTech);
-    card.classList.toggle('hidden', !(tagMatch && techMatch));
+    card.classList.toggle('hidden', !(tagMatch && actMatch && techMatch));
   });
 }
 </script>
