@@ -17,7 +17,9 @@
   "ootqTier": "low",
   "origin": "MUGEN",
   "author": "Kousa氏",
-  "activation": "4CA启动",
+  "activation": [
+    "4CA启动"
+  ],
   "techniques": [
     "强制永续",
     "直死",

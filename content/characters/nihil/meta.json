@@ -17,7 +17,9 @@
   "ootqTier": "approaching-low",
   "origin": "MUGEN",
   "author": "NOMI氏",
-  "activation": "ZIP溢出",
+  "activation": [
+    "ZIP溢出"
+  ],
   "techniques": [
     "未知"
   ],

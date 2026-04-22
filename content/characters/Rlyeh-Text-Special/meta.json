@@ -17,7 +17,9 @@
   "ootqTier": "high",
   "origin": "MUGEN",
   "author": "Volcrz氏",
-  "activation": "StateDef溢出",
+  "activation": [
+    "StateDef溢出"
+  ],
   "techniques": [
     "StateDef溢出修复",
     "%F阻止",

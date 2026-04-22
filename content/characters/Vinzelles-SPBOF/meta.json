@@ -17,7 +17,9 @@
   "ootqTier": "approaching-low",
   "origin": "MUGEN",
   "author": "AHZ氏",
-  "activation": "SFF溢出",
+  "activation": [
+    "SFF溢出"
+  ],
   "techniques": [
     "ST文件无效化"
   ],

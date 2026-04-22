@@ -17,7 +17,9 @@
   "ootqTier": "low",
   "origin": "MUGEN",
   "author": "Gondwana氏",
-  "activation": "4CA启动",
+  "activation": [
+    "4CA启动"
+  ],
   "techniques": [
     "强制永续",
     "强制Damage"

@@ -17,7 +17,9 @@
   "ootqTier": "approaching-mid",
   "origin": "MUGEN",
   "author": "YC0_Xa氏",
-  "activation": "Alleg40劫持",
+  "activation": [
+    "Alleg40劫持"
+  ],
   "techniques": [
     "替换主程序文件"
   ],

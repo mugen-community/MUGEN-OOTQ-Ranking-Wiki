@@ -17,7 +17,9 @@
   "ootqTier": "approaching-low",
   "origin": "MUGEN",
   "author": "ydccdy氏",
-  "activation": "ZIP溢出",
+  "activation": [
+    "ZIP溢出"
+  ],
   "techniques": [
     "重装人物替换自身"
   ],

@@ -17,7 +17,9 @@
   "ootqTier": "mid",
   "origin": "MUGEN",
   "author": "drab氏",
-  "activation": "%N启动",
+  "activation": [
+    "%N启动"
+  ],
   "techniques": [
     "Player消去",
     "强制胜利"

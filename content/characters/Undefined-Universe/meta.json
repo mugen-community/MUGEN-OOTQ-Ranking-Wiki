@@ -17,7 +17,9 @@
   "ootqTier": "approaching-mid",
   "origin": "MUGEN",
   "author": "Minase&&N2L氏",
-  "activation": "Alleg40劫持",
+  "activation": [
+    "Alleg40劫持"
+  ],
   "techniques": [
     "未知"
   ],

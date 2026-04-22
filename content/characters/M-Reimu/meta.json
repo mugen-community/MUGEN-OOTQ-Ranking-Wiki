@@ -17,7 +17,10 @@
   "ootqTier": "mid",
   "origin": "MUGEN",
   "author": "熄废人氏",
-  "activation": "StateDef溢出+4CA启动",
+  "activation": [
+    "StateDef溢出",
+    "4CA启动"
+  ],
   "techniques": [
     "直死",
     "NOKO解除",

@@ -17,7 +17,9 @@
   "ootqTier": "mid",
   "origin": "MUGEN",
   "author": "ydccdy氏",
-  "activation": "512超越启动",
+  "activation": [
+    "512超越启动"
+  ],
   "techniques": [
     "直死",
     "CNS指空",

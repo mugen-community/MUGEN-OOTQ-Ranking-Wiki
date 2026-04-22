@@ -18,7 +18,11 @@
 <div class="tag-filter" id="activationFilter">
   <span style="margin-right:8px;font-weight:bold;">启动技术:</span>
   <button class="tag-btn active" data-act="all">全部</button>
-  <% const allActs = [...new Set(items.flatMap(item => item.meta.activation ? [item.meta.activation] : []))].sort(); %>
+  <% const allActs = [...new Set(items.flatMap(item => {
+    const act = item.meta.activation;
+    if (!act) return [];
+    return Array.isArray(act) ? act : [act];
+  }))].sort(); %>
   <% allActs.forEach(act => { %>
     <button class="tag-btn" data-act="<%= act %>"><%= act %></button>
   <% }); %>
@@ -35,7 +39,7 @@
 
 <div class="list-container" id="listContainer" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
   <% items.forEach((item, idx) => { %>
-    <a class="card <%= itemType %>-card" href="<%= item.slug %>/" data-tags='<%- JSON.stringify(Array.isArray(item.meta.tags) ? item.meta.tags.map(t => getField(t, 'zh')) : (item.meta.tags?.zh || [])).replace(/'/g, "\\'") %>' data-act='<%- item.meta.activation || "" %>' data-techs='<%- JSON.stringify(item.meta.techniques || []).replace(/'/g, "\\'") %>' style="display:flex;flex-direction:column;padding:16px;">
+    <a class="card <%= itemType %>-card" href="<%= item.slug %>/" data-tags='<%- JSON.stringify(Array.isArray(item.meta.tags) ? item.meta.tags.map(t => getField(t, 'zh')) : (item.meta.tags?.zh || [])).replace(/'/g, "\\'") %>' data-acts='<%- JSON.stringify(Array.isArray(item.meta.activation) ? item.meta.activation : (item.meta.activation ? [item.meta.activation] : [])).replace(/'/g, "\\'") %>' data-techs='<%- JSON.stringify(item.meta.techniques || []).replace(/'/g, "\\'") %>' style="display:flex;flex-direction:column;padding:16px;">
       <% if (itemType === 'char' && item.meta.image) { %>
         <img src="../img/<%= item.meta.image %>" alt="<%= getField(item.meta.title, 'zh') %>" style="width:100%;height:100px;object-fit:cover;border-radius:4px;margin-bottom:10px;">
       <% } %>
@@ -174,10 +178,10 @@ function filterCards() {
   console.log('Filtering', cards.length, 'cards', 'currentTag:', currentTag, 'currentAct:', currentAct, 'currentTech:', currentTech);
   cards.forEach(card => {
     const tags = JSON.parse(card.dataset.tags || '[]').map(t => t.toLowerCase());
-    const act = (card.dataset.act || '').toLowerCase();
+    const acts = JSON.parse(card.dataset.acts || '[]').map(a => a.toLowerCase());
     const techs = JSON.parse(card.dataset.techs || '[]').map(t => t.toLowerCase());
     const tagMatch = currentTag === 'all' || tags.includes(currentTag.toLowerCase());
-    const actMatch = currentAct === 'all' || act === currentAct.toLowerCase();
+    const actMatch = currentAct === 'all' || acts.includes(currentAct.toLowerCase());
     const techMatch = currentTech === 'all' || techs.includes(currentTech.toLowerCase());
     const shouldHide = !(tagMatch && actMatch && techMatch);
     card.classList.toggle('hidden', shouldHide);

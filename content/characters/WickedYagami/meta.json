@@ -17,7 +17,9 @@
   "ootqTier": "high",
   "origin": "MUGEN",
   "author": "C氏",
-  "activation": "StateDef溢出",
+  "activation": [
+    "StateDef溢出"
+  ],
   "techniques": [
     "StateDef溢出修复",
     "DEF保护",

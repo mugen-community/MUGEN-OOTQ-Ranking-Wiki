@@ -17,7 +17,11 @@
   "ootqTier": "high",
   "origin": "MUGEN",
   "author": "Rin氏",
-  "activation": "StateDef+CMD+Flag溢出",
+  "activation": [
+    "StateDef",
+    "CMD",
+    "Flag溢出"
+  ],
   "techniques": [
     "随阶段增长复合攻击",
     "全领域防御",

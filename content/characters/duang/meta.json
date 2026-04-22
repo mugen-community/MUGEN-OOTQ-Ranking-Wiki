@@ -17,7 +17,9 @@
   "ootqTier": "low",
   "origin": "MUGEN",
   "author": "Hell氏+Yui氏",
-  "activation": "%n启动",
+  "activation": [
+    "%n启动"
+  ],
   "techniques": [
     "强制胜利",
     "RoundTimer改"

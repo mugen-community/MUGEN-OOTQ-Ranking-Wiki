@@ -17,7 +17,9 @@
   "ootqTier": "mid",
   "origin": "MUGEN",
   "author": "笑氏",
-  "activation": "%n启动",
+  "activation": [
+    "%n启动"
+  ],
   "techniques": [
     "冻结解除",
     "直死",

@@ -46,7 +46,7 @@
 
 <div class="list-container" id="listContainer" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
   
-    <a class="card term-card" href="ootq/" data-tags='[]' data-act='' data-techs='[]' style="display:flex;flex-direction:column;padding:16px;">
+    <a class="card term-card" href="ootq/" data-tags='[]' data-acts='[]' data-techs='[]' style="display:flex;flex-direction:column;padding:16px;">
       
       <div class="card-header">
         <h3 class="card-title" data-lang='{&#34;zh&#34;:&#34;OOTQ&#34;,&#34;en&#34;:&#34;OOTQ&#34;,&#34;ja&#34;:&#34;OOTQ&#34;}'>OOTQ</h3>
@@ -58,7 +58,7 @@
       
     </a>
   
-    <a class="card term-card" href="parent-fabrication/" data-tags='[]' data-act='' data-techs='[]' style="display:flex;flex-direction:column;padding:16px;">
+    <a class="card term-card" href="parent-fabrication/" data-tags='[]' data-acts='[]' data-techs='[]' style="display:flex;flex-direction:column;padding:16px;">
       
       <div class="card-header">
         <h3 class="card-title" data-lang='{&#34;zh&#34;:&#34;亲捏造&#34;,&#34;en&#34;:&#34;Parent-Fabrication&#34;,&#34;ja&#34;:&#34;親捏造&#34;}'>亲捏造</h3>
@@ -70,7 +70,7 @@
       
     </a>
   
-    <a class="card term-card" href="shellcode/" data-tags='[]' data-act='' data-techs='[]' style="display:flex;flex-direction:column;padding:16px;">
+    <a class="card term-card" href="shellcode/" data-tags='[]' data-acts='[]' data-techs='[]' style="display:flex;flex-direction:column;padding:16px;">
       
       <div class="card-header">
         <h3 class="card-title" data-lang='{&#34;zh&#34;:&#34;Shellcode&#34;,&#34;en&#34;:&#34;Shellcode&#34;,&#34;ja&#34;:&#34;Shellcode&#34;}'>Shellcode</h3>
@@ -192,10 +192,10 @@ function filterCards() {
   console.log('Filtering', cards.length, 'cards', 'currentTag:', currentTag, 'currentAct:', currentAct, 'currentTech:', currentTech);
   cards.forEach(card => {
     const tags = JSON.parse(card.dataset.tags || '[]').map(t => t.toLowerCase());
-    const act = (card.dataset.act || '').toLowerCase();
+    const acts = JSON.parse(card.dataset.acts || '[]').map(a => a.toLowerCase());
     const techs = JSON.parse(card.dataset.techs || '[]').map(t => t.toLowerCase());
     const tagMatch = currentTag === 'all' || tags.includes(currentTag.toLowerCase());
-    const actMatch = currentAct === 'all' || act === currentAct.toLowerCase();
+    const actMatch = currentAct === 'all' || acts.includes(currentAct.toLowerCase());
     const techMatch = currentTech === 'all' || techs.includes(currentTech.toLowerCase());
     const shouldHide = !(tagMatch && actMatch && techMatch);
     card.classList.toggle('hidden', shouldHide);
