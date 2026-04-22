@@ -128,7 +128,7 @@ characters.forEach(char => {
   const ootqLevelJa = tierData.ja + (char.sublevel ? char.sublevel : '');
   
   const imgName = imgNameMap[char.title];
-  const image = imgName ? `../img/${imgName}` : null;
+  const image = imgName ? imgName : null;
   const downloadUrl = links[char.title] || null;
   
   const tagsZh = ["审核", tierData.zh];

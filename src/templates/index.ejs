@@ -38,10 +38,10 @@ const tierNamesEn = { top: 'Top', high: 'High', mid: 'Mid', low: 'Low' };
     <div class="home-tier-section">
       <h3 class="home-tier-header" data-i18n="tier<%= tier.charAt(0).toUpperCase() + tier.slice(1) %>"><%= tierNames[tier] || tier %></h3>
       <div class="card-grid">
-        <% groups[tier].forEach(char => { %>
+        <% groups[tier].slice(0, 3).forEach(char => { %>
           <a class="card char-card" href="<%= r('characters/') %><%= char.slug %>/">
             <% if (char.meta.image) { %>
-              <img src="<%= char.meta.image %>" alt="<%= getField(char.meta.title, 'zh') %>" style="width:100%;height:120px;object-fit:cover;border-radius:4px;margin-bottom:10px;">
+              <img src="img/<%= char.meta.image %>" alt="<%= getField(char.meta.title, 'zh') %>" style="width:100%;height:120px;object-fit:cover;border-radius:4px;margin-bottom:10px;">
             <% } %>
             <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
               <h3 class="char-title" data-lang='<%= JSON.stringify(char.meta.title).replace(/'/g, "\\'") %>'><%= getField(char.meta.title, 'zh') %></h3>
@@ -49,7 +49,7 @@ const tierNamesEn = { top: 'Top', high: 'High', mid: 'Mid', low: 'Low' };
                 <span class="ootq-badge ootq-<%= tier %> char-ootq" data-lang='<%= JSON.stringify(char.meta.ootqLevel).replace(/'/g, "\\'") %>'><%= getField(char.meta.ootqLevel, 'zh') %></span>
               <% } %>
             </div>
-            <p class="char-summary" data-lang='<%= JSON.stringify(char.meta.summary).replace(/'/g, "\\'") %>'><%= getField(char.meta.summary, 'zh') %></p>
+            <p class="char-summary" data-lang='<%= JSON.stringify(char.meta.summary).replace(/'/g, "\\'") %>' style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;"><%= getField(char.meta.summary, 'zh') %></p>
           </a>
         <% }); %>
       </div>
@@ -67,7 +67,7 @@ const tierNamesEn = { top: 'Top', high: 'High', mid: 'Mid', low: 'Low' };
       <a class="card glossary-card" href="<%= r('glossary/') %><%= term.slug %>/">
         <h3 class="term-title" data-lang='<%= JSON.stringify(term.meta.title).replace(/'/g, "\\'") %>'><%= getField(term.meta.title, 'zh') %></h3>
         <% if (term.meta.summary) { %>
-          <p class="term-summary" data-lang='<%= JSON.stringify(term.meta.summary).replace(/'/g, "\\'") %>'><%= getField(term.meta.summary, 'zh') %></p>
+          <p class="term-summary" data-lang='<%= JSON.stringify(term.meta.summary).replace(/'/g, "\\'") %>' style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;"><%= getField(term.meta.summary, 'zh') %></p>
         <% } %>
       </a>
     <% }); %>

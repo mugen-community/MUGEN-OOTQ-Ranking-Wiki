@@ -15,7 +15,7 @@
     </div>
     <% if (meta.image) { %>
       <div class="infobox-image">
-        <img src="<%= r('assets/') %><%= meta.image %>" alt="<%= getField(meta.title, 'zh') %>">
+        <img src="<%= r('') %>img/<%= meta.image %>" alt="<%= getField(meta.title, 'zh') %>">
       </div>
     <% } else if (hasAssets) { %>
       <div class="infobox-image">
