@@ -1,0 +1,24 @@
+<div class="character-page">
+  <h1><%= meta.title %></h1>
+  <% if (meta.tags) { %>
+    <div class="tags">
+      <% meta.tags.forEach(tag => { %>
+        <span class="tag"><%= tag %></span>
+      <% }); %>
+    </div>
+  <% } %>
+  <% if (meta.summary) { %>
+    <p class="summary"><%= meta.summary %></p>
+  <% } %>
+  <div class="content-body">
+    <%- meta.description || '<p>暂无详细描述</p>' %>
+  </div>
+  <% if (meta.links) { %>
+    <h2>相关链接</h2>
+    <ul>
+      <% meta.links.forEach(link => { %>
+        <li><a href="<%= link.url %>"><%= link.name %></a></li>
+      <% }); %>
+    </ul>
+  <% } %>
+</div>

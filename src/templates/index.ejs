@@ -1,0 +1,36 @@
+<h2>角色</h2>
+<div class="card-grid">
+  <% characters.forEach(char => { %>
+    <a class="card" href="/characters/<%= char.slug %>/">
+      <h3><%= char.title %></h3>
+      <% if (char.summary) { %>
+        <p><%= char.summary %></p>
+      <% } %>
+      <% if (char.tags) { %>
+        <div class="tags">
+          <% char.tags.forEach(tag => { %>
+            <span class="tag"><%= tag %></span>
+          <% }); %>
+        </div>
+      <% } %>
+    </a>
+  <% }); %>
+  <% if (characters.length === 0) { %>
+    <p>暂无角色</p>
+  <% } %>
+</div>
+
+<h2>术语</h2>
+<div class="card-grid">
+  <% terms.forEach(term => { %>
+    <a class="card" href="/glossary/<%= term.slug %>/">
+      <h3><%= term.title %></h3>
+      <% if (term.summary) { %>
+        <p><%= term.summary %></p>
+      <% } %>
+    </a>
+  <% }); %>
+  <% if (terms.length === 0) { %>
+    <p>暂无术语</p>
+  <% } %>
+</div>

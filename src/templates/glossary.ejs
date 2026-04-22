@@ -1,0 +1,9 @@
+<div class="glossary-page">
+  <h1><%= meta.title %></h1>
+  <% if (meta.summary) { %>
+    <p class="summary"><%= meta.summary %></p>
+  <% } %>
+  <div class="content-body">
+    <%- meta.description || '<p>暂无详细描述</p>' %>
+  </div>
+</div>
