@@ -1,0 +1,5 @@
+{
+  "title": "Shellcode",
+  "summary": "在内存中执行恶意代码的攻击技术",
+  "description": "<p>shellcode是一段在内存中执行的恶意代码，通过缓冲区溢出等漏洞注入。</p><h2>原理</h2><p>程序的数据和代码在内存中无法区分，攻击者通过溢出覆盖返回地址，使程序跳转到恶意代码执行。</p><h2>在MUGEN中的应用</h2><p>通过StateDef溢出、CMD溢出、Flag溢出等技术在MUGEN中执行shellcode。</p>"
+}

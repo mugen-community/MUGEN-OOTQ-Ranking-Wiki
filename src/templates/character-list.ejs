@@ -6,19 +6,18 @@
 <div class="card-grid">
   <% characters.forEach(char => { %>
     <a class="card" href="<%= r('') %><%= char.slug %>/">
-      <% if (char.image) { %>
-        <img src="<%= char.slug %>/assets/<%= char.image %>" alt="<%= char.title %>" style="width:100%;height:150px;object-fit:cover;border-radius:4px;margin-bottom:10px;">
-      <% } %>
-      <h3><%= char.title %></h3>
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+        <h3 style="margin:0;"><%= char.title %></h3>
+        <% if (char.ootqLevel) { %>
+          <span class="ootq-badge ootq-<%= char.ootqTier || 'low' %>"><%= char.ootqLevel %></span>
+        <% } %>
+      </div>
       <% if (char.summary) { %>
         <p><%= char.summary %></p>
       <% } %>
-      <% if (char.ootqLevel) { %>
-        <p><strong>OOTQ:</strong> <%= char.ootqLevel %></p>
-      <% } %>
       <% if (char.tags && char.tags.length) { %>
         <div class="tags">
-          <% char.tags.slice(0, 3).forEach(tag => { %>
+          <% char.tags.slice(0, 4).forEach(tag => { %>
             <span class="tag"><%= tag %></span>
           <% }); %>
         </div>

@@ -1,0 +1,12 @@
+{
+  "title": "dsrugal",
+  "summary": "论外上位C级参照角色，StateDef溢出型",
+  "ootqLevel": "论外上位C",
+  "ootqTier": "high",
+  "origin": "MUGEN",
+  "author": "ydccdy氏",
+  "tags": ["论外上位", "C级", "StateDef溢出", "Def指向改", "SuperNull"],
+  "activation": "StateDef溢出",
+  "techniques": ["Def指向改"],
+  "description": "<p>论外上位C级参照角色。ydccdy氏作品，无P数差设定。</p><h2>技术特点</h2><p>在角色选择界面选中时即刻执行StateDef溢出，可以击破论外中位。具备Def指向改能力，可将敌方DEF路径修改。</p><h2>论外中位与上位差距</h2><p>上位角色的启动速度是论外中位完全不能相比的，两者之间的差距是论外分级中最大的。</p>"
+}

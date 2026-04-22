@@ -215,6 +215,26 @@ main {
   color: var(--text-secondary);
 }
 
+.ootq-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85em;
+}
+
+.ootq-low { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+.ootq-mid { background: #fff3e0; color: #ef6c00; border: 1px solid #ffcc80; }
+.ootq-high { background: #fce4ec; color: #c62828; border: 1px solid #f48fb1; }
+.ootq-top { background: #f3e5f5; color: #7b1fa2; border: 1px solid #ce93d8; }
+
+[data-theme="dark"] .ootq-low { background: #1b3320; color: #81c784; border-color: #2e7d32; }
+[data-theme="dark"] .ootq-mid { background: #3d2a1a; color: #ffb74d; border-color: #ef6c00; }
+[data-theme="dark"] .ootq-high { background: #3d1a24; color: #ef5350; border-color: #c62828; }
+[data-theme="dark"] .ootq-top { background: #2d1b3d; color: #ba68c8; border-color: #7b1fa2; }
+
 .content-page {
   max-width: 900px;
 }

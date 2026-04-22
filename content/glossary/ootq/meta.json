@@ -1,5 +1,5 @@
 {
   "title": "OOTQ",
   "summary": "Out of Topic Quality，论外质量等级",
-  "description": "<p>OOTQ是MUGEN中用于评价角色强度的一个标准。</p><p>主要衡量角色在论外级别的表现。</p>"
+  "description": "<p>OOTQ（Out of Topic Quality）是MUGEN中用于评价角色强度等级的标准。</p><h2>分级体系</h2><p>论外分为下位、中位、上位、最上位四个等级，每个等级又分为A、B、C三个子级。</p><h2>判定标准</h2><p>以攻击面达到论外级别（可击破Test-Over-God）为基准，根据启动速度、攻击手段、防装能力进行综合分级。</p>"
 }

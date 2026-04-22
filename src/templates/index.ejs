@@ -8,11 +8,17 @@
 <section class="section">
   <div class="section-header">
     <h2 data-i18n="characters">角色</h2>
+    <a href="<%= r('characters/') %>" style="font-size:0.9em;">查看全部 →</a>
   </div>
   <div class="card-grid" id="charactersGrid">
-    <% characters.forEach(char => { %>
+    <% characters.slice(0, 6).forEach(char => { %>
       <a class="card" href="<%= r('characters/') %><%= char.slug %>/">
-        <h3><%= char.title %></h3>
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+          <h3 style="margin:0;"><%= char.title %></h3>
+          <% if (char.ootqLevel) { %>
+            <span class="ootq-badge ootq-<%= char.ootqTier || 'low' %>"><%= char.ootqLevel %></span>
+          <% } %>
+        </div>
         <% if (char.summary) { %>
           <p><%= char.summary %></p>
         <% } %>
@@ -36,6 +42,7 @@
 <section class="section">
   <div class="section-header">
     <h2 data-i18n="glossary">术语</h2>
+    <a href="<%= r('glossary/') %>" style="font-size:0.9em;">查看全部 →</a>
   </div>
   <div class="card-grid" id="glossaryGrid">
     <% terms.forEach(term => { %>

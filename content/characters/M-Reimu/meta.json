@@ -1,0 +1,12 @@
+{
+  "title": "M-Reimu ver3.11",
+  "summary": "论外中位A参照角色，StateDef溢出+变量扩张型亲捏造",
+  "ootqLevel": "论外中位A",
+  "ootqTier": "mid",
+  "origin": "MUGEN",
+  "author": "熄废人氏",
+  "tags": ["论外中位", "A级", "StateDef溢出", "变量扩张型亲捏造", "SuperNull"],
+  "activation": "StateDef溢出+4CA",
+  "techniques": ["变量扩张型亲捏造:直死", "NOKO解除", "全领域属性攻击", "全领域Player消去", "API调用源代码修改:CNS指回"],
+  "description": "<p>论外中位A级参照角色中最具代表性的角色之一。熄废人氏作品，12P使用。</p><h2>技术特点</h2><p>结合StateDef溢出启动与变量扩张型亲捏造，具备直死、全领域Player消去等高级攻击能力。</p><h2>溢出修复</h2><p>使用API调用对CNS进行源代码修改，可执行CNS指回防御。</p>"
+}

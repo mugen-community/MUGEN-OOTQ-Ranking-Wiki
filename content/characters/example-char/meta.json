@@ -1,9 +1,0 @@
-{
-  "title": "示例角色",
-  "summary": "这是一个示例角色卡片",
-  "tags": ["论外", "高阶"],
-  "description": "<p>这是角色的详细描述内容。</p><p>支持HTML格式的描述文本。</p>",
-  "links": [
-    { "name": "下载链接", "url": "https://example.com" }
-  ]
-}

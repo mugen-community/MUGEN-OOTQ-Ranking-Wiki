@@ -1,0 +1,12 @@
+{
+  "title": "duang",
+  "summary": "论外下位C级参照角色，%n启动型角色",
+  "ootqLevel": "论外下位C",
+  "ootqTier": "low",
+  "origin": "MUGEN",
+  "author": "Hell氏+Yui氏",
+  "tags": ["论外下位", "C级", "%n启动", "强制胜利", "RoundTimer改"],
+  "activation": "%n启动",
+  "techniques": ["强制胜利", "RoundTimer改"],
+  "description": "<p>论外下位C级参照角色。使用%n启动方式，在游戏加载阶段以后执行shellcode进行攻击。</p><h2>技术特点</h2><p>通过%n格式化字符串攻击修改RoundTimer实现强制胜利。</p>"
+}

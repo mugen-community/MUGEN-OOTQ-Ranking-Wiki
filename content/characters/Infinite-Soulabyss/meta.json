@@ -1,0 +1,12 @@
+{
+  "title": "Infinite Soulabyss",
+  "summary": "论外上位A级参照角色，多重溢出+API多线程攻防",
+  "ootqLevel": "论外上位A",
+  "ootqTier": "high",
+  "origin": "MUGEN",
+  "author": "Rin氏",
+  "tags": ["论外上位", "A级", "StateDef+CMD+Flag溢出", "API调用多线程", "全领域防御"],
+  "activation": "StateDef+CMD+Flag溢出",
+  "techniques": ["API调用多线程:随阶段增长复合攻击", "全领域防御", "DEF保护", "CNS指回", "Player保护", "溢出无效时140循环卡死"],
+  "description": "<p>论外上位A级参照角色。Rin氏作品，无P数差设定。</p><h2>技术特点</h2><p>同时具备StateDef、CMD、Flag三种溢出启动技术，属于SuperNull级别。API多线程执行随阶段增长的复合攻击。</p><h2>防御体系</h2><p>具备全领域防御、DEF保护、CNS指回、Player保护多重防御机制。当溢出无效时会触发140循环卡死作为保底。</p>"
+}

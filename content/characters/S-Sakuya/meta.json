@@ -1,0 +1,12 @@
+{
+  "title": "S-Sakuya",
+  "summary": "论外中位C级参照角色，多重DTC亲捏造型",
+  "ootqLevel": "论外中位C",
+  "ootqTier": "mid",
+  "origin": "MUGEN",
+  "author": "熄废人氏",
+  "tags": ["论外中位", "C级", "4CA启动", "DTC型亲捏造", "直死"],
+  "activation": "4CA启动",
+  "techniques": ["DTC型亲捏造:直死", "Noko解除", "无敌解除", "强制Damage", "强制落下", "强制变数弄"],
+  "description": "<p>论外中位C级参照角色。熄废人氏的12P角色。</p><h2>技术特点</h2><p>采用4CA启动方式，具备多重DTC型亲捏造能力，可执行直死、强制落下等多种攻击。</p><h2>防御难度</h2><p>相比论外下位，中位角色带有阻止敌方代码的攻击能力。</p>"
+}
