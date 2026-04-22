@@ -97,6 +97,11 @@
       </div>
 
       <div class="form-group">
+        <label>下载链接 (选填)</label>
+        <input type="text" id="downloadUrl" placeholder="例如: https://example.com/character.zip">
+      </div>
+
+      <div class="form-group">
         <label>详细描述 (支持HTML)</label>
         <textarea id="description" rows="8" placeholder="<p>详细描述...</p>"></textarea>
       </div>
@@ -149,6 +154,7 @@ function generateJSON() {
   const author = document.getElementById('author').value.trim();
   const activation = document.getElementById('activation').value.trim();
   const tagsInput = document.getElementById('tags').value.trim();
+  const downloadUrl = document.getElementById('downloadUrl').value.trim();
   const description = document.getElementById('description').value.trim();
 
   if (!slug) { alert('请输入 Slug'); return; }
@@ -185,6 +191,7 @@ function generateJSON() {
       ja: tags.map(t => t)
     },
     activation: activation,
+    downloadUrl: downloadUrl || null,
     description: {
       zh: description || '',
       en: description || '',

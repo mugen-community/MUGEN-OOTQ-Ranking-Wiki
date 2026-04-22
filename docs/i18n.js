@@ -20,7 +20,9 @@ const translations = {
     tierLow: "论外下位",
     leadText: "所有已收录的角色列表",
     newEntry: "新建",
-    edit: "编辑"
+    edit: "编辑",
+    download: "下载",
+    downloadLink: "点击下载"
   },
   en: {
     home: "Home",
@@ -43,7 +45,9 @@ const translations = {
     tierLow: "Low",
     leadText: "All indexed characters",
     newEntry: "New",
-    edit: "Edit"
+    edit: "Edit",
+    download: "Download",
+    downloadLink: "Download"
   },
   ja: {
     home: "ホーム",
@@ -66,7 +70,9 @@ const translations = {
     tierLow: "論外下位",
     leadText: "すべての登録済みキャラクター",
     newEntry: "新規",
-    edit: "編集"
+    edit: "編集",
+    download: "ダウンロード",
+    downloadLink: "ダウンロード"
   }
 };
 

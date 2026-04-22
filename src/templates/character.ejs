@@ -35,6 +35,9 @@
       <% if (meta.tags && meta.tags.length) { %>
         <tr><th data-i18n="tags">标签</th><td><div class="tags"><% (Array.isArray(meta.tags) ? meta.tags : meta.tags.zh || []).forEach(tag => { %><span class="tag"><%= tag %></span><% }); %></div></td></tr>
       <% } %>
+      <% if (meta.downloadUrl) { %>
+        <tr><th data-i18n="download">下载</th><td><a href="<%= meta.downloadUrl %>" target="_blank" rel="noopener" data-i18n="downloadLink">点击下载</a></td></tr>
+      <% } %>
     </table>
   </div>
 
