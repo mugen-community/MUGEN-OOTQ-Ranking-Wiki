@@ -122,6 +122,10 @@ function applyLang(lang) {
     }
   }
 
+  if (typeof updateCards === 'function') {
+    updateCards(lang);
+  }
+
   updateLangSelect(lang);
 }
 

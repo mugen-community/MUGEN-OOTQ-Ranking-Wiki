@@ -97,9 +97,9 @@ async function build() {
         const title = getField(term.meta.title, 'zh');
         const summary = getField(term.meta.summary, 'zh');
         return `
-        <a class="card" href="${rel('glossary/', 0)}${term.slug}/">
-          <h3>${title}</h3>
-          ${summary ? `<p>${summary}</p>` : ''}
+        <a class="card glossary-card" href="${rel('glossary/', 0)}${term.slug}/">
+          <h3 class="term-title">${title}</h3>
+          ${summary ? `<p class="term-summary">${summary}</p>` : ''}
         </a>
       `}).join('')}
       ${terms.length === 0 ? '<div class="empty-state"><p>No terms yet</p></div>' : ''}
