@@ -5,7 +5,7 @@ const ejs = require('ejs');
 const ROOT = path.resolve(__dirname, '..');
 const SRC = path.join(ROOT, 'src');
 const CONTENT = path.join(ROOT, 'content');
-const DIST = path.join(ROOT, 'dist');
+const DIST = path.join(ROOT, 'docs');
 
 async function build() {
   await fs.emptyDir(DIST);
@@ -56,7 +56,7 @@ async function build() {
   const indexHtml = ejs.render(layoutTemplate, { title: 'MUGEN OOTQ Ranking Wiki', content: indexContent });
   await fs.writeFile(path.join(DIST, 'index.html'), indexHtml);
 
-  console.log('Build complete! Output in dist/');
+  console.log('Build complete! Output in docs/');
 }
 
 build().catch(console.error);

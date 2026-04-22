@@ -1,6 +1,6 @@
 # MUGEN OOTQ Ranking Wiki
 
-这是一个面向公开展示的 `MUGEN` 现代论外分级网站。
+`MUGEN` 现代论外分级对外展示网站。
 
 ## 内容结构
 
@@ -13,7 +13,7 @@ content/
     meta.json       # 术语信息
 ```
 
-## meta.json 示例
+## meta.json 格式
 
 ```json
 {
@@ -32,10 +32,10 @@ npm install
 npm run build
 ```
 
-输出到 `dist/`，可直接部署到 GitHub Pages。
+输出到 `docs/`，设置 GitHub Pages 源为 `docs/` 即可部署。
 
-## 添加新内容
+## 添加内容
 
-- 新增角色：`content/characters/<slug>/meta.json`
-- 新增术语：`content/glossary/<slug>/meta.json`
-- 重新构建：`npm run build`
+- 角色：新建 `content/characters/<slug>/meta.json`
+- 术语：新建 `content/glossary/<slug>/meta.json`
+- 重建：`npm run build`
