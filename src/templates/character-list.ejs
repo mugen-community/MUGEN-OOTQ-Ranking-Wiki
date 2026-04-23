@@ -155,11 +155,125 @@
     return urls;
   }
 
+  function buildImageListFromMarkers(metaValue, bodyImages) {
+    const list = [];
+
+    if (Array.isArray(metaValue)) {
+      metaValue.forEach((v) => {
+        const trimmed = String(v).trim();
+        if (!trimmed) return;
+
+        const numMatch = trimmed.match(/^<!--\s*image:(\d+)\s*-->$/i);
+        if (numMatch) {
+          const idx = parseInt(numMatch[1], 10) - 1;
+          if (idx >= 0 && idx < bodyImages.length) list.push(bodyImages[idx]);
+          return;
+        }
+
+        list.push(trimmed);
+      });
+    } else if (typeof metaValue === 'string' && metaValue.trim()) {
+      const trimmed = metaValue.trim();
+
+      const numMatch = trimmed.match(/^<!--\s*image:(\d+)\s*-->$/i);
+      if (numMatch) {
+        const idx = parseInt(numMatch[1], 10) - 1;
+        if (idx >= 0 && idx < bodyImages.length) list.push(bodyImages[idx]);
+        return list;
+      }
+
+      list.push(trimmed);
+    }
+
+    return list;
+  }
+
   function buildImageList(metaValue, fallbackFromBody) {
     const list = [];
 
     if (Array.isArray(metaValue)) {
       metaValue.forEach((v) => { if (v && v.trim()) list.push(v.trim()); });
+    } else if (typeof metaValue === 'string' && metaValue.trim()) {
+      list.push(metaValue.trim());
+    }
+
+    if (!list.length && fallbackFromBody) {
+      fallbackFromBody.forEach((u) => { if (u && !list.includes(u)) list.push(u); });
+    }
+
+    return list;
+  }
+
+        const numMatch2 = trimmed.match(/^(\d+)$/);
+        if (numMatch2) {
+          const idx = parseInt(numMatch2[1], 10) - 1;
+          if (idx >= 0 && idx < bodyImages.length) list.push(bodyImages[idx]);
+          return;
+        }
+
+        list.push(trimmed);
+      });
+    } else if (typeof metaValue === 'string' && metaValue.trim()) {
+      const trimmed = metaValue.trim();
+
+      const numMatch = trimmed.match(/^<!--\s*image:(\d+)\s*-->$/i);
+      if (numMatch) {
+        const idx = parseInt(numMatch[1], 10) - 1;
+        if (idx >= 0 && idx < bodyImages.length) list.push(bodyImages[idx]);
+        return list;
+      }
+
+      const numMatch2 = trimmed.match(/^(\d+)$/);
+      if (numMatch2) {
+        const idx = parseInt(numMatch2[1], 10) - 1;
+        if (idx >= 0 && idx < bodyImages.length) list.push(bodyImages[idx]);
+        return list;
+      }
+
+      list.push(trimmed);
+    }
+
+    return list;
+  }
+
+  function buildImageList(metaValue, fallbackFromBody) {
+    const list = [];
+
+    if (Array.isArray(metaValue)) {
+      metaValue.forEach((v) => {
+        const trimmed = String(v).trim();
+        if (!trimmed) return;
+
+        const numMatch = trimmed.match(/^<!--\s*image:(\d+)\s*-->$/i);
+        if (numMatch) {
+          const idx = parseInt(numMatch[1], 10) - 1;
+          if (idx >= 0 && idx < bodyImages.length) list.push(bodyImages[idx]);
+          return;
+        }
+
+        const numMatch2 = trimmed.match(/^(\d+)$/);
+        if (numMatch2) {
+          const idx = parseInt(numMatch2[1], 10) - 1;
+          if (idx >= 0 && idx < bodyImages.length) list.push(bodyImages[idx]);
+          return;
+        }
+
+        const numMatch3 = trimmed.match(/^<!--\s*image:(\d+)\s*-->$/i);
+        if (numMatch3) {
+          const idx = parseInt(numMatch3[1], 10) - 1;
+          if (idx >= 0 && idx < bodyImages.length) list.push(bodyImages[idx]);
+          return;
+        }
+
+        const numMatch4 = trimmed.match(/^(\d+)$/);
+        if (numMatch4) {
+          const idx = parseInt(numMatch4[1], 10) - 1;
+          if (idx >= 0 && idx < bodyImages.length) list.push(bodyImages[idx]);
+          return;
+        }
+
+        list.push(trimmed);
+      });
     } else if (typeof metaValue === 'string' && metaValue.trim()) {
       list.push(metaValue.trim());
     }
@@ -239,14 +353,33 @@
     const fallbackBody = bodyWithoutJsonBlock(issue.body);
     const bodyImages = extractAllImages(issue.body);
 
-    const images = buildImageList(meta.image || meta.images, null);
-    const detailImages = buildImageList(meta.detailImages, null);
+    const images = buildImageListFromMarkers(meta.image || meta.images, bodyImages);
+    const detailImages = buildImageListFromMarkers(meta.detailImages, bodyImages);
 
-    if (!images.length && !detailImages.length && bodyImages.length) {
-      images.push(bodyImages[0]);
-      if (bodyImages.length > 1) {
-        bodyImages.slice(1).forEach((u) => { if (u) detailImages.push(u); });
-      }
+    return {
+      id: issue.id,
+      number: issue.number,
+      slug,
+      title,
+      summary: pickLocalized(meta.summary) || '',
+      description: pickLocalized(meta.description) || fallbackBody,
+      tier,
+      level,
+      origin: meta.origin || '',
+      author: meta.author || '',
+      tags,
+      activation,
+      techniques,
+      downloadUrl: meta.downloadUrl || '',
+      images,
+      detailImages,
+      issueUrl: issue.html_url,
+      updatedAt: issue.updated_at
+    };
+    }
+
+    if (images.length > 1 || detailImages.length > 1) {
+      console.log('[Carousel Debug] slug:', slug, 'images:', images, 'detailImages:', detailImages);
     }
 
     return {

@@ -14,6 +14,12 @@ MUGEN 论外分级制度角色 Wiki，基于 **GitHub Issue CMS**。
 
 在 Issue 正文粘贴：
 
+```
+<!-- 图片会在这里显示 -->
+<img width="300" alt="预览图" src="https://github.com/user-attachments/assets/..." />
+<img width="600" alt="介绍图1" src="https://github.com/user-attachments/assets/..." />
+<img width="600" alt="介绍图2" src="https://github.com/user-attachments/assets/..." />
+
 ```json
 {
   "slug": "chizomeno",
@@ -26,11 +32,12 @@ MUGEN 论外分级制度角色 Wiki，基于 **GitHub Issue CMS**。
   "activation": ["%n启动"],
   "techniques": ["LIFE改写"],
   "tags": { "zh": ["参考"], "en": ["Reference"], "ja": ["参考"] },
-  "images": ["https://example.com/cover.png"],
-  "detailImages": ["https://example.com/screenshot1.png", "https://example.com/screenshot2.png"],
+  "images": ["<!-- image:1 -->"],
+  "detailImages": ["<!-- image:2 -->", "<!-- image:3 -->"],
   "downloadUrl": "https://example.com/download",
   "description": { "zh": "<p>详情</p>", "en": "<p>Details</p>", "ja": "<p>詳細</p>" }
 }
+```
 ```
 
 ### 字段说明
@@ -47,8 +54,8 @@ MUGEN 论外分级制度角色 Wiki，基于 **GitHub Issue CMS**。
 | `activation` | 否 | 启动方式数组 |
 | `techniques` | 否 | 技术数组 |
 | `tags` | 否 | 多语言标签 |
-| `images` | 否 | 预览图/头像 URL 数组，显示在卡片和信息框（向后兼容 `image` 字段） |
-| `detailImages` | 否 | 介绍图 URL 数组，显示在详情页描述区域。未指定时 Issue 正文中的图片自动作为介绍图 |
+| `images` | 否 | 预览图/头像数组，支持 URL 或 `<!-- image:N -->` 标识符引用正文图片 |
+| `detailImages` | 否 | 介绍图数组，支持 URL 或 `<!-- image:N -->` 标识符引用正文图片 |
 | `downloadUrl` | 否 | 下载链接 |
 | `description` | 否 | 多语言详细描述，支持 HTML 和 Markdown |
 

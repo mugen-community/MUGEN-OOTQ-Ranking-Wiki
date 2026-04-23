@@ -7,6 +7,11 @@ labels: character
 
 <!-- 请在下方 ```json 代码块中填写角色信息，字段说明见 https://github.com/mugen-community/MUGEN-OOTQ-Ranking-Wiki#角色-issue-数据格式 -->
 <!-- summary / description 支持 HTML 和 GitHub Flavored Markdown -->
+<!-- 图片引用说明：可在正文上传图片，然后在 JSON 中用 <!-- image:N --> 引用（N=图片序号，从1开始） -->
+<!-- 示例：上传了3张图片，第一张作为预览图，第2、3张作为介绍图：
+     "images": ["<!-- image:1 -->"],
+     "detailImages": ["<!-- image:2 -->", "<!-- image:3 -->"]
+-->
 
 ```json
 {
@@ -28,6 +33,4 @@ labels: character
 ```
 
 <!-- JSON 代码块之外的内容也会作为描述回退显示 -->
-<!-- images: 预览图/头像URL数组，显示在列表卡片和信息框（向后兼容 image 字段） -->
-<!-- detailImages: 介绍图URL数组，显示在详情页描述区域。未指定时正文中的图片自动作为介绍图 -->
-<!-- 可在下方拖拽上传截图，上传的图片会自动显示在详情页 -->
+<!-- 在此处拖拽上传图片，然后在 JSON 中用 <!-- image:N --> 引用 -->
