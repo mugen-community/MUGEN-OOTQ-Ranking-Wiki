@@ -180,12 +180,16 @@
     if (typeof imagePathOrUrl === 'string' && imagePathOrUrl.trim()) {
       const raw = imagePathOrUrl.trim();
       if (/^https?:\/\//i.test(raw)) return raw;
+    }
+    if (fallbackBodyImage) return fallbackBodyImage;
+    if (typeof imagePathOrUrl === 'string' && imagePathOrUrl.trim()) {
+      const raw = imagePathOrUrl.trim();
       if (raw.startsWith('/')) {
         return 'https://raw.githubusercontent.com/' + CONFIG.owner + '/' + CONFIG.repo + '/' + CONFIG.branch + raw;
       }
       return 'https://raw.githubusercontent.com/' + CONFIG.owner + '/' + CONFIG.repo + '/' + CONFIG.branch + '/docs/img/' + raw;
     }
-    return fallbackBodyImage || '';
+    return '';
   }
 
   function bodyWithoutJsonBlock(body) {
