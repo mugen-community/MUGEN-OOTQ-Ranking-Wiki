@@ -46,6 +46,8 @@
         <li><strong>summary</strong> / <strong>description</strong> 等文本字段支持 <strong>HTML</strong> 和 <strong>GitHub Flavored Markdown</strong>，页面会自动渲染。</li>
         <li>多语言字段使用 <code>{ "zh": "...", "en": "...", "ja": "..." }</code> 格式。</li>
         <li>必填标签：<code>character</code>；辅助标签：<code>slug:&lt;slug&gt;</code>、<code>tier:low|mid|high|top</code>、<code>level:&lt;text&gt;</code>。</li>
+        <li><strong>images</strong>：预览图/头像 URL 数组，显示在列表卡片和信息框中（向后兼容旧 <code>image</code> 字段）。</li>
+        <li><strong>detailImages</strong>：介绍图 URL 数组，显示在详情页描述区域。未指定时 Issue 正文中的图片自动作为介绍图。</li>
         <li>JSON 代码块之外的 Issue 正文内容会作为描述回退显示。</li>
       </ul>
     </div>
@@ -107,8 +109,13 @@
       </div>
 
       <div class="form-group">
-        <label>图片 (支持 URL 或 docs/img 下文件名)</label>
-        <input type="text" id="image" placeholder="例如: https://.../cover.png 或 Chizomeno.png">
+        <label>预览图 / 头像 (逗号分隔，支持 URL 或 docs/img 下文件名)</label>
+        <input type="text" id="images" placeholder="例如: https://.../cover.png, Chizomeno.png">
+      </div>
+
+      <div class="form-group">
+        <label>介绍图 (逗号分隔，用于详情页，支持 URL)</label>
+        <input type="text" id="detailImages" placeholder="例如: https://.../screenshot1.png, https://.../screenshot2.png">
       </div>
 
       <div class="form-group">
@@ -169,7 +176,8 @@
     const activation = splitList('activation');
     const techniques = splitList('techniques');
     const tags = splitList('tags');
-    const image = document.getElementById('image').value.trim();
+    const images = splitList('images');
+    const detailImages = splitList('detailImages');
     const downloadUrl = document.getElementById('downloadUrl').value.trim();
     const description = document.getElementById('description').value.trim();
 
@@ -184,7 +192,8 @@
       activation: activation.length ? activation : undefined,
       techniques: techniques.length ? techniques : undefined,
       tags: tags.length ? { zh: tags, en: tags, ja: tags } : undefined,
-      image: image || undefined,
+      images: images.length ? images : undefined,
+      detailImages: detailImages.length ? detailImages : undefined,
       downloadUrl: downloadUrl || undefined,
       description: description ? { zh: description, en: description, ja: description } : undefined
     };

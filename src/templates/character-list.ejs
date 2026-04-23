@@ -141,28 +141,46 @@
     return null;
   }
 
-  function extractFirstImage(body) {
-    const images = extractBodyImages(body);
-    return images[0] || '';
-  }
-
-  function extractBodyImages(body) {
+  function extractAllImages(body) {
     const text = body || '';
     const urls = [];
 
-    const htmlRe = /<img\s[^>]*src=["'](https?:\/\/[^"']+)["']/gi;
+    const htmlRegex = /<img\s[^>]*src=["'](https?:\/\/[^"']+)["']/gi;
     let m;
-    while ((m = htmlRe.exec(text)) !== null) urls.push(m[1]);
+    while ((m = htmlRegex.exec(text)) !== null) urls.push(m[1]);
 
-    const mdRe = /!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/gi;
-    while ((m = mdRe.exec(text)) !== null) urls.push(m[1]);
-
-    const rawRe = /(https?:\/\/[^\s]+\.(?:png|jpg|jpeg|webp|gif))/gi;
-    while ((m = rawRe.exec(text)) !== null) {
-      if (!urls.includes(m[1])) urls.push(m[1]);
-    }
+    const mdRegex = /!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/gi;
+    while ((m = mdRegex.exec(text)) !== null) urls.push(m[1]);
 
     return urls;
+  }
+
+  function normalizeImageUrl(raw) {
+    if (!raw || typeof raw !== 'string') return '';
+    raw = raw.trim();
+    if (!raw) return '';
+    if (/^https?:\/\//i.test(raw)) return raw;
+    if (raw.startsWith('/')) {
+      return 'https://raw.githubusercontent.com/' + CONFIG.owner + '/' + CONFIG.repo + '/' + CONFIG.branch + raw;
+    }
+    return 'https://raw.githubusercontent.com/' + CONFIG.owner + '/' + CONFIG.repo + '/' + CONFIG.branch + '/docs/img/' + raw;
+  }
+
+  function buildImageList(metaValue, fallbackFromBody) {
+    const list = [];
+
+    if (Array.isArray(metaValue)) {
+      metaValue.forEach((v) => { const u = normalizeImageUrl(v); if (u) list.push(u); });
+    } else if (typeof metaValue === 'string' && metaValue.trim()) {
+      const u = normalizeImageUrl(metaValue);
+      if (u) list.push(u);
+    }
+
+    if (!list.length && fallbackFromBody) {
+      fallbackFromBody.forEach((u) => { if (u && !list.includes(u)) list.push(u); });
+    }
+
+    return list;
   }
 
   function readLabel(labels, prefix) {
@@ -187,22 +205,6 @@
     if (levelLabel) return levelLabel;
     if (tier === 'unknown') return '未标注';
     return tier.toUpperCase();
-  }
-
-  function normalizeImage(imagePathOrUrl, fallbackBodyImage) {
-    if (typeof imagePathOrUrl === 'string' && imagePathOrUrl.trim()) {
-      const raw = imagePathOrUrl.trim();
-      if (/^https?:\/\//i.test(raw)) return raw;
-    }
-    if (fallbackBodyImage) return fallbackBodyImage;
-    if (typeof imagePathOrUrl === 'string' && imagePathOrUrl.trim()) {
-      const raw = imagePathOrUrl.trim();
-      if (raw.startsWith('/')) {
-        return 'https://raw.githubusercontent.com/' + CONFIG.owner + '/' + CONFIG.repo + '/' + CONFIG.branch + raw;
-      }
-      return 'https://raw.githubusercontent.com/' + CONFIG.owner + '/' + CONFIG.repo + '/' + CONFIG.branch + '/docs/img/' + raw;
-    }
-    return '';
   }
 
   function bodyWithoutJsonBlock(body) {
@@ -247,20 +249,10 @@
     const activation = normalizeList(meta.activation);
     const techniques = normalizeList(meta.techniques);
     const fallbackBody = bodyWithoutJsonBlock(issue.body);
-    const bodyImages = extractBodyImages(issue.body);
+    const bodyImages = extractAllImages(issue.body);
 
-    const jsonImage = (typeof meta.image === 'string' && meta.image.trim()) ? meta.image.trim() : '';
-    const images = [];
-    if (/^https?:\/\//i.test(jsonImage)) {
-      images.push(jsonImage);
-    }
-    bodyImages.forEach((url) => {
-      if (!images.includes(url)) images.push(url);
-    });
-    if (jsonImage && !/^https?:\/\//i.test(jsonImage)) {
-      const resolved = normalizeImage(jsonImage, '');
-      if (resolved && !images.includes(resolved)) images.push(resolved);
-    }
+    const images = buildImageList(meta.image || meta.images, bodyImages.slice(0, 1));
+    const detailImages = buildImageList(meta.detailImages, bodyImages.length > 1 ? bodyImages.slice(1) : []);
 
     return {
       id: issue.id,
@@ -278,6 +270,7 @@
       techniques,
       downloadUrl: meta.downloadUrl || '',
       images,
+      detailImages,
       issueUrl: issue.html_url,
       updatedAt: issue.updated_at
     };
@@ -337,50 +330,6 @@
     return url.pathname + url.search;
   }
 
-  function carouselHtml(images, title, prefix) {
-    if (!images.length) return '';
-    const id = prefix + '-' + Math.random().toString(36).slice(2, 8);
-    if (images.length === 1) {
-      return '<div class="' + prefix + '">' +
-        '<img src="' + escapeHtml(images[0]) + '" alt="' + escapeHtml(title) + '">' +
-        '</div>';
-    }
-    const slides = images.map((src, i) =>
-      '<img src="' + escapeHtml(src) + '" alt="' + escapeHtml(title) + ' ' + (i + 1) + '" style="display:' + (i === 0 ? 'block' : 'none') + '">'
-    ).join('');
-    const dots = images.map((_, i) =>
-      '<span class="carousel-dot' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '"></span>'
-    ).join('');
-    return '<div class="carousel ' + prefix + '" id="' + id + '" data-count="' + images.length + '" data-current="0">' +
-      '<div class="carousel-viewport">' + slides + '</div>' +
-      '<button class="carousel-prev" data-dir="-1" type="button">&#8249;</button>' +
-      '<button class="carousel-next" data-dir="1" type="button">&#8250;</button>' +
-      '<div class="carousel-dots">' + dots + '</div>' +
-      '</div>';
-  }
-
-  function bindCarousel(container) {
-    container.querySelectorAll('.carousel').forEach((el) => {
-      const imgs = el.querySelectorAll('.carousel-viewport img');
-      const dots = el.querySelectorAll('.carousel-dot');
-      const count = parseInt(el.dataset.count, 10);
-      let current = 0;
-
-      function goTo(idx) {
-        current = ((idx % count) + count) % count;
-        el.dataset.current = current;
-        imgs.forEach((img, i) => img.style.display = i === current ? 'block' : 'none');
-        dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
-      }
-
-      el.querySelector('.carousel-prev').addEventListener('click', (e) => { e.stopPropagation(); goTo(current - 1); });
-      el.querySelector('.carousel-next').addEventListener('click', (e) => { e.stopPropagation(); goTo(current + 1); });
-      dots.forEach((dot) => {
-        dot.addEventListener('click', (e) => { e.stopPropagation(); goTo(parseInt(e.target.dataset.idx, 10)); });
-      });
-    });
-  }
-
   function renderCards(items) {
     refs.cardGrid.innerHTML = '';
 
@@ -397,7 +346,7 @@
       card.style.cursor = 'pointer';
 
       card.innerHTML = [
-        carouselHtml(item.images, item.title, 'card-carousel'),
+        item.images.length ? '<img class="issue-thumb" src="' + escapeHtml(item.images[0]) + '" alt="' + escapeHtml(item.title) + '">' : '',
         '<div class="issue-head">',
         '<h3>' + escapeHtml(item.title) + '</h3>',
         '<span class="ootq-badge ootq-' + tierClass(item.tier) + '">' + escapeHtml(item.level) + '</span>',
@@ -407,7 +356,6 @@
       ].join('');
 
       card.addEventListener('click', () => openDetail(item.slug));
-      bindCarousel(card);
       fragment.appendChild(card);
     }
 
@@ -457,6 +405,25 @@
     ].join('');
   }
 
+  function renderCarousel(imageList, containerClass) {
+    if (!imageList.length) return '';
+    const id = 'carousel-' + containerClass + '-' + Math.random().toString(36).slice(2, 8);
+    const slides = imageList.map((src, i) =>
+      '<img class="carousel-slide' + (i === 0 ? ' active' : '') + '" src="' + escapeHtml(src) + '" alt="" loading="lazy">'
+    ).join('');
+
+    return [
+      '<div class="carousel ' + escapeHtml(containerClass) + '" id="' + id + '" data-index="0" data-total="' + imageList.length + '">',
+      '<div class="carousel-viewport">' + slides + '</div>',
+      imageList.length > 1 ? [
+        '<button class="carousel-btn carousel-prev" data-dir="-1" type="button">&#8249;</button>',
+        '<button class="carousel-btn carousel-next" data-dir="1" type="button">&#8250;</button>',
+        '<span class="carousel-counter">1 / ' + imageList.length + '</span>'
+      ].join('') : '',
+      '</div>'
+    ].join('');
+  }
+
   function renderDetail(item) {
     refs.detail.innerHTML = [
       '<div class="detail-header">',
@@ -466,12 +433,13 @@
       '<div class="character-page">',
       '<aside class="infobox">',
       '<div class="infobox-header"><h1>' + escapeHtml(item.title) + '</h1></div>',
-      item.images.length ? '<div class="infobox-image">' + carouselHtml(item.images, item.title, 'detail-carousel') + '</div>' : '',
+      item.images.length ? '<div class="infobox-image">' + renderCarousel(item.images, 'preview') + '</div>' : '',
       '<table class="infobox-table">' + renderMetaRows(item) + '</table>',
       '</aside>',
       '<article class="article-body markdown-body">',
       item.summary ? '<p class="lead">' + escapeHtml(item.summary) + '</p>' : '',
       '<div>' + renderDescription(item.description) + '</div>',
+      item.detailImages.length ? '<div class="detail-images">' + renderCarousel(item.detailImages, 'detail') + '</div>' : '',
       '</article>',
       '</div>',
       '<section class="comments-section">',
@@ -481,7 +449,22 @@
       '</section>'
     ].join('');
 
-    bindCarousel(refs.detail);
+    refs.detail.querySelectorAll('.carousel-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const carousel = btn.closest('.carousel');
+        const dir = parseInt(btn.dataset.dir, 10);
+        const total = parseInt(carousel.dataset.total, 10);
+        let idx = parseInt(carousel.dataset.index, 10);
+        idx = (idx + dir + total) % total;
+        carousel.dataset.index = idx;
+        carousel.querySelectorAll('.carousel-slide').forEach((s, i) => {
+          s.classList.toggle('active', i === idx);
+        });
+        const counter = carousel.querySelector('.carousel-counter');
+        if (counter) counter.textContent = (idx + 1) + ' / ' + total;
+      });
+    });
 
     const backBtn = document.getElementById('backToList');
     if (backBtn) {
@@ -614,84 +597,13 @@
   flex-direction: column;
 }
 
-.carousel {
-  position: relative;
-}
-
-.card-carousel img {
+.issue-thumb {
   width: 100%;
   height: 160px;
   object-fit: cover;
   border-radius: 6px;
   margin-bottom: 10px;
   background: var(--bg-secondary);
-  display: block;
-}
-
-.carousel-viewport img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  background: var(--bg-secondary);
-}
-
-.detail-carousel .carousel-viewport img {
-  max-width: 100%;
-  max-height: 280px;
-  height: auto;
-  object-fit: contain;
-  border-radius: 4px;
-}
-
-.carousel-prev,
-.carousel-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-70%);
-  background: rgba(0,0,0,0.45);
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.carousel-prev { left: 6px; }
-.carousel-next { right: 6px; }
-
-.carousel-prev:hover,
-.carousel-next:hover {
-  background: rgba(0,0,0,0.7);
-}
-
-.carousel-dots {
-  text-align: center;
-  margin-top: -4px;
-  margin-bottom: 8px;
-}
-
-.carousel-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--border-color);
-  margin: 0 3px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.carousel-dot.active {
-  background: var(--link-color);
 }
 
 .issue-head {
@@ -757,6 +669,94 @@
   max-width: 100%;
   max-height: 250px;
   border-radius: 4px;
+}
+
+.carousel {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.carousel-viewport {
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+
+.carousel-slide {
+  display: none;
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.carousel-slide.active {
+  display: inline-block;
+}
+
+.carousel.preview .carousel-slide.active {
+  max-height: 250px;
+}
+
+.carousel.detail .carousel-slide.active {
+  max-height: 480px;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  border: none;
+  font-size: 1.4em;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: background 0.2s;
+}
+
+.carousel-btn:hover {
+  background: rgba(0,0,0,0.7);
+}
+
+.carousel-prev {
+  left: 6px;
+}
+
+.carousel-next {
+  right: 6px;
+}
+
+.carousel-counter {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 0.75em;
+  padding: 2px 8px;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.detail-images {
+  margin-top: 20px;
+}
+
+.detail-images .carousel {
+  display: block;
+  text-align: center;
+}
+
+.detail-images .carousel-slide.active {
+  width: 100%;
+  object-fit: contain;
 }
 
 .infobox-table {

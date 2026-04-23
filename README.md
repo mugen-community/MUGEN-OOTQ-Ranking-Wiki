@@ -26,7 +26,8 @@ MUGEN 论外分级制度角色 Wiki，基于 **GitHub Issue CMS**。
   "activation": ["%n启动"],
   "techniques": ["LIFE改写"],
   "tags": { "zh": ["参考"], "en": ["Reference"], "ja": ["参考"] },
-  "image": "https://example.com/cover.png",
+  "images": ["https://example.com/cover.png"],
+  "detailImages": ["https://example.com/screenshot1.png", "https://example.com/screenshot2.png"],
   "downloadUrl": "https://example.com/download",
   "description": { "zh": "<p>详情</p>", "en": "<p>Details</p>", "ja": "<p>詳細</p>" }
 }
@@ -46,7 +47,8 @@ MUGEN 论外分级制度角色 Wiki，基于 **GitHub Issue CMS**。
 | `activation` | 否 | 启动方式数组 |
 | `techniques` | 否 | 技术数组 |
 | `tags` | 否 | 多语言标签 |
-| `image` | 否 | 图片 URL 或 `docs/img/` 下文件名 |
+| `images` | 否 | 预览图/头像 URL 数组，显示在卡片和信息框（向后兼容 `image` 字段） |
+| `detailImages` | 否 | 介绍图 URL 数组，显示在详情页描述区域。未指定时 Issue 正文中的图片自动作为介绍图 |
 | `downloadUrl` | 否 | 下载链接 |
 | `description` | 否 | 多语言详细描述，支持 HTML 和 Markdown |
 

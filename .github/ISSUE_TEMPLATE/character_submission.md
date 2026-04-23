@@ -20,11 +20,14 @@ labels: character
   "activation": [],
   "techniques": [],
   "tags": { "zh": [], "en": [], "ja": [] },
-  "image": "",
+  "images": [],
+  "detailImages": [],
   "downloadUrl": "",
   "description": { "zh": "", "en": "", "ja": "" }
 }
 ```
 
 <!-- JSON 代码块之外的内容也会作为描述回退显示 -->
-<!-- 可在下方补充截图、视频等 -->
+<!-- images: 预览图/头像URL数组，显示在列表卡片和信息框（向后兼容 image 字段） -->
+<!-- detailImages: 介绍图URL数组，显示在详情页描述区域。未指定时正文中的图片自动作为介绍图 -->
+<!-- 可在下方拖拽上传截图，上传的图片会自动显示在详情页 -->
