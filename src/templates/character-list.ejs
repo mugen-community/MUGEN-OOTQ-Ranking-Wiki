@@ -159,7 +159,12 @@
     if (!raw || typeof raw !== 'string') return '';
     raw = raw.trim();
     if (!raw) return '';
+
     if (/^https?:\/\//i.test(raw)) return raw;
+
+    const htmlMatch = raw.match(/<img\s[^>]*src=["'](https?:\/\/[^"']+)["']/i);
+    if (htmlMatch) return htmlMatch[1];
+
     if (raw.startsWith('/')) {
       return 'https://raw.githubusercontent.com/' + CONFIG.owner + '/' + CONFIG.repo + '/' + CONFIG.branch + raw;
     }
