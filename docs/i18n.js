@@ -23,7 +23,30 @@ const translations = {
     newEntry: "新建",
     edit: "编辑",
     download: "下载",
-    downloadLink: "点击下载"
+    downloadLink: "点击下载",
+
+    charLead: "列表、预览、详情统一在此页面。数据实时来自 GitHub Issues。",
+    tierFilter: "分级",
+    tierAll: "全部",
+    tierUnknown: "未标注",
+    reload: "刷新",
+    loading: "正在从 GitHub 拉取角色数据...",
+    charList: "角色列表",
+    noMatch: "没有匹配角色",
+    resultCount: "共 {n} 条",
+    errorLoad: "加载失败，请稍后重试。",
+
+    homeLead: "角色内容已重构为 GitHub Issue CMS。列表、预览、详情统一在单页中。",
+    charDB: "角色数据库",
+    charDBDesc: "进入单页角色库，按 Issue 实时读取数据，支持搜索、预览、详情。",
+    glossaryDesc: "当前术语条目数量：",
+    backToList: "← 返回列表",
+    viewOnGitHub: "在 GitHub 查看",
+    comments: "评论",
+    loadingComments: "正在加载评论...",
+    noComments: "暂无评论，",
+    commentsFailed: "评论加载失败",
+    noDetailDesc: "暂无详细描述"
   },
   en: {
     home: "Home",
@@ -49,7 +72,30 @@ const translations = {
     newEntry: "New",
     edit: "Edit",
     download: "Download",
-    downloadLink: "Download"
+    downloadLink: "Download",
+
+    charLead: "List, preview, and details in one page. Data from GitHub Issues in real-time.",
+    tierFilter: "Tier",
+    tierAll: "All",
+    tierUnknown: "Unknown",
+    reload: "Refresh",
+    loading: "Loading character data from GitHub...",
+    charList: "Character List",
+    noMatch: "No matching characters",
+    resultCount: "{n} results",
+    errorLoad: "Load failed, please try again later.",
+
+    homeLead: "Content rebuilt as GitHub Issue CMS. List, preview, and details in a single page.",
+    charDB: "Character Database",
+    charDBDesc: "Enter the single-page character database with real-time data from Issues.",
+    glossaryDesc: "Current glossary entries: ",
+    backToList: "← Back to List",
+    viewOnGitHub: "View on GitHub",
+    comments: "Comments",
+    loadingComments: "Loading comments...",
+    noComments: "No comments yet, ",
+    commentsFailed: "Failed to load comments",
+    noDetailDesc: "No description yet"
   },
   ja: {
     home: "ホーム",
@@ -75,7 +121,30 @@ const translations = {
     newEntry: "新規",
     edit: "編集",
     download: "ダウンロード",
-    downloadLink: "ダウンロード"
+    downloadLink: "ダウンロード",
+
+    charLead: "リスト、プレビュー、詳細はこの1ページで。データはGitHub Issuesからリアルタイムに。",
+    tierFilter: "等級",
+    tierAll: "すべて",
+    tierUnknown: "未分類",
+    reload: "リフレッシュ",
+    loading: "GitHubからキャラクターデータを読み込み中...",
+    charList: "キャラクターリスト",
+    noMatch: "該当するキャラクターがいません",
+    resultCount: "全 {n} 件",
+    errorLoad: "読み込みに失敗しました。後でもう一度お試しください。",
+
+    homeLead: "GitHub Issue CMSに再構築されました。リスト、プレビュー、詳細が1ページに統合されました。",
+    charDB: "キャラクターデータベース",
+    charDBDesc: "シングルページキャラクターデータベースへ。Issuesからリアルタイムにデータを表示。",
+    glossaryDesc: "現在の用語エントリー数：",
+    backToList: "← リストに戻る",
+    viewOnGitHub: "GitHubで見る",
+    comments: "コメント",
+    loadingComments: "コメントを読み込み中...",
+    noComments: "まだコメントがありません。",
+    commentsFailed: "コメントの読み込みに失敗しました",
+    noDetailDesc: "詳細説明はまだありません"
   }
 };
 
@@ -86,6 +155,13 @@ function getStoredTheme() {
 function getStoredLang() {
   return localStorage.getItem("lang") || "zh";
 }
+
+function __(key, lang) {
+  const l = lang || getStoredLang();
+  const t = translations[l] || translations.zh;
+  return t[key] || key;
+}
+window.__ = __;
 
 function getField(val, lang) {
   if (typeof val === 'string') return val;

@@ -7,9 +7,9 @@ MUGEN 论外分级制度角色 Wiki，基于 **GitHub Issue CMS**。
 - 角色数据存储在 GitHub Issues 中，页面运行时通过 GitHub API 拉取
 - 角色 Issue 使用 `character` 标签，正文使用多语言 markdown 表格格式
 - 详情页自动拉取 Issue 评论作为评论区
-- 标签和分级从 `Tag-System.json` 中定义，前端通过关键词匹配自动检测
+- 标签和分级从 `tag-system.json` 中定义，前端通过关键词匹配自动检测
 - 描述支持 **GitHub Flavored Markdown** 渲染
-- 构建脚本将 `Tag-System.json` 注入前端模板
+- 构建脚本将 `tag-system.json` 注入前端模板
 
 ## 角色 Issue 数据格式
 
@@ -62,13 +62,13 @@ MUGEN 论外分级制度角色 Wiki，基于 **GitHub Issue CMS**。
 | **来源** | 是 | 角色来源作品/引擎 |
 | **启动方式** | 否 | %n启动 / %N Trigger 等 |
 | **技术** | 否 | 角色使用的技术，用逗号分隔 |
-| **分级** | 是 | 填写 **标签关键词**（如 `论外下位C`），须与 `Tag-System.json` 中 `tier_system` 的 level 对应 |
-| **标签** | 是 | 填写 **标签关键词**（如 `参照`、`Reference`），用逗号分隔，须与 `Tag-System.json` 中的条目对应 |
+| **分级** | 是 | 填写 **标签关键词**（如 `论外下位C`），须与 `tag-system.json` 中 `tier_system` 的 level 对应 |
+| **标签** | 是 | 填写 **标签关键词**（如 `参照`、`Reference`），用逗号分隔，须与 `tag-system.json` 中的条目对应 |
 | **下载链接** | 否 | 角色下载地址 |
 
 ### 标签系统
 
-标签和分级在 `Tag-System.json`（仓库根目录）中定义：
+标签和分级在 `src/i18n/tag-system.json` 中定义：
 
 ```json
 {
@@ -86,7 +86,7 @@ MUGEN 论外分级制度角色 Wiki，基于 **GitHub Issue CMS**。
 ```
 
 - 前端自动扫描正文全文，匹配任意语言的标签关键词（大小写不敏感）
-- 所有标签内容均从 `Tag-System.json` 读取，无需在 JS 中硬编码
+- 所有标签内容均从 `tag-system.json` 读取，无需在 JS 中硬编码
 
 ### 分级检测规则
 
@@ -135,9 +135,11 @@ npm run build
 ## 项目结构
 
 ```
-Tag-System.json      # 标签/分级定义（多语言）
+src/
+  i18n/
+    tag-system.json  # 标签/分级定义（多语言）
 scripts/
-  build.js           # 构建脚本（注入 Tag-System.json）
+  build.js           # 构建脚本（注入 src/i18n/tag-system.json）
   convert-issues.js  # 旧格式迁移工具
 src/
   assets/            # 静态资源

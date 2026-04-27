@@ -60,7 +60,7 @@ async function build() {
   await fs.ensureDir(path.join(DIST, 'characters'));
   await fs.ensureDir(path.join(DIST, 'glossary'));
 
-  const tagSystem = await fs.readJson(path.join(ROOT, 'Tag-System.json'));
+  const tagSystem = await fs.readJson(path.join(SRC, 'i18n', 'tag-system.json'));
   const charListContent = ejs.render(charListTemplate, { r: (p) => rel(p, 1), tagSystem });
   const charListHtml = ejs.render(layoutTemplate, {
     title: 'Characters',

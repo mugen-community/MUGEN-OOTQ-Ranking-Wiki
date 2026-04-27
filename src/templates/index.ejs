@@ -1,21 +1,17 @@
 <div class="page-header">
   <h1>MUGEN OOTQ Ranking Wiki</h1>
-  <p class="lead">角色内容已重构为 GitHub Issue CMS。列表、预览、详情统一在单页中。</p>
+  <p class="lead" data-i18n="homeLead">角色内容已重构为 GitHub Issue CMS。列表、预览、详情统一在单页中。</p>
 </div>
 
 <section class="section">
   <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
     <a class="card" href="<%= r('characters/') %>">
-      <h3>角色数据库</h3>
-      <p>进入单页角色库，按 Issue 实时读取数据，支持搜索、预览、详情。</p>
-    </a>
-    <a class="card" href="<%= r('edit.html') %>">
-      <h3>新建角色草稿</h3>
-      <p>通过表单生成 Issue JSON 草稿并跳转 GitHub 新建 Issue 页面。</p>
+      <h3 data-i18n="charDB">角色数据库</h3>
+      <p data-i18n="charDBDesc">进入单页角色库，按 Issue 实时读取数据，支持搜索、预览、详情。</p>
     </a>
     <a class="card" href="<%= r('glossary/') %>">
-      <h3>术语表</h3>
-      <p>当前术语条目数量：<strong><%= termsCount %></strong></p>
+      <h3 data-i18n="glossary">术语表</h3>
+      <p><span data-i18n="glossaryDesc">当前术语条目数量：</span><strong><%= termsCount %></strong></p>
     </a>
   </div>
 </section>

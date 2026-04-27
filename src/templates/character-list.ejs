@@ -1,27 +1,27 @@
 <div class="page-header">
   <h1 data-i18n="characters">角色数据库</h1>
-  <p class="lead">列表、预览、详情统一在此页面。数据实时来自 GitHub Issues。</p>
+  <p class="lead" data-i18n="charLead">列表、预览、详情统一在此页面。数据实时来自 GitHub Issues。</p>
 </div>
 
 <section class="issue-cms-controls">
   <div class="search-box">
-    <input id="searchInput" type="search" placeholder="按角色名、标签搜索...">
+    <input id="searchInput" type="search" data-i18n-placeholder="search" placeholder="按角色名、标签搜索...">
   </div>
   <div class="filter-row">
-    <label for="tierFilter">分级</label>
+    <label for="tierFilter" data-i18n="tierFilter">分级</label>
     <select id="tierFilter" class="lang-select">
-      <option value="all">全部</option>
-      <option value="top">论外最上位</option>
-      <option value="high">论外上位</option>
-      <option value="mid">论外中位</option>
-      <option value="low">论外下位</option>
-      <option value="unknown">未标注</option>
+      <option value="all" data-i18n="tierAll">全部</option>
+      <option value="top" data-i18n="tierTop">论外最上位</option>
+      <option value="high" data-i18n="tierHigh">论外上位</option>
+      <option value="mid" data-i18n="tierMid">论外中位</option>
+      <option value="low" data-i18n="tierLow">论外下位</option>
+      <option value="unknown" data-i18n="tierUnknown">未标注</option>
     </select>
-    <button id="reloadBtn" class="btn" type="button">刷新</button>
+    <button id="reloadBtn" class="btn" type="button" data-i18n="reload">刷新</button>
   </div>
 </section>
 
-<section id="loadingState" class="info-box">正在从 GitHub 拉取角色数据...</section>
+<section id="loadingState" class="info-box" data-i18n="loading">正在从 GitHub 拉取角色数据...</section>
 <section id="errorState" class="info-box" style="display:none;"></section>
 
 <section id="listView" class="section" style="display:none;">
@@ -252,7 +252,7 @@
     const lang = state.lang;
     if (level && typeof level === 'object') return level[lang] || level.zh || '';
     if (typeof level === 'string') return level;
-    return '\u672A\u6807\u6CE8';
+    return window.__('tierUnknown', state.lang);
   }
 
   function tagLabel(tag, lang) {
@@ -265,7 +265,7 @@
 
   function renderDescription(text) {
     const raw = String(text || '').trim();
-    if (!raw) return '<p class="empty">\u6682\u65E0\u8BE6\u7EC6\u63CF\u8FF0</p>';
+    if (!raw) return '<p class="empty">' + window.__('noDetailDesc', state.lang) + '</p>';
     const clean = raw.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/ig, '');
     if (typeof marked !== 'undefined' && marked.parse) {
       try { return marked.parse(clean); } catch (e) {}
@@ -278,7 +278,7 @@
   function renderCards(items, lang) {
     refs.cardGrid.innerHTML = '';
     if (!items.length) {
-      refs.cardGrid.innerHTML = '<div class="empty-state">\u6CA1\u6709\u5339\u914D\u89D2\u8272</div>';
+      refs.cardGrid.innerHTML = '<div class="empty-state">' + window.__('noMatch', lang) + '</div>';
       return;
     }
     const fragment = document.createDocumentFragment();
@@ -331,8 +331,8 @@
     const levelText = tierLabel(item.tier, item.level);
     refs.detail.innerHTML = [
       '<div class="detail-header">',
-      '<button class="btn" id="backToList" type="button">\u2190 \u8FD4\u56DE\u5217\u8868</button>',
-      '<a class="btn" href="' + escapeHtml(item.issueUrl) + '" target="_blank" rel="noopener">\u5728 GitHub \u67E5\u770B #' + item.number + '</a>',
+      '<button class="btn" id="backToList" type="button">\u2190 ' + window.__('backToList', lang) + '</button>',
+      '<a class="btn" href="' + escapeHtml(item.issueUrl) + '" target="_blank" rel="noopener">' + window.__('viewOnGitHub', lang) + ' #' + item.number + '</a>',
       '</div>',
       '<article class="markdown-body">',
       '<h1 class="detail-title">' + escapeHtml(item.title) + '</h1>',
@@ -344,8 +344,8 @@
       renderDescription(localizedBody),
       '</article>',
       '<section class="comments-section">',
-      '<h2>\u8BC4\u8BBA</h2>',
-      '<div id="commentsLoading" class="info-box">\u6B63\u5728\u52A0\u8F7D\u8BC4\u8BBA...</div>',
+      '<h2>' + window.__('comments', lang) + '</h2>',
+      '<div id="commentsLoading" class="info-box">' + window.__('loadingComments', lang) + '</div>',
       '<div id="commentsList"></div>',
       '</section>'
     ].join('');
@@ -365,7 +365,7 @@
       const list = document.getElementById('commentsList');
       if (loading) loading.style.display = 'none';
       if (!comments.length) {
-        list.innerHTML = '<p class="muted">\u6682\u65E0\u8BC4\u8BBA\uFF0C<a href="' + escapeHtml(item.issueUrl) + '" target="_blank" rel="noopener">\u524D\u5F80 GitHub \u8BC4\u8BBA</a></p>';
+        list.innerHTML = '<p class="muted">' + window.__('noComments', lang) + '<a href="' + escapeHtml(item.issueUrl) + '" target="_blank" rel="noopener">' + window.__('viewOnGitHub', lang) + '</a></p>';
         return;
       }
       list.innerHTML = comments.map(renderComment).join('');
@@ -373,7 +373,7 @@
       const loading = document.getElementById('commentsLoading');
       const list = document.getElementById('commentsList');
       if (loading) loading.style.display = 'none';
-      list.innerHTML = '<p class="muted">\u8BC4\u8BBA\u52A0\u8F7D\u5931\u8D25</p>';
+      list.innerHTML = '<p class="muted">' + window.__('commentsFailed', lang) + '</p>';
     });
   }
 
@@ -398,7 +398,7 @@
       return a.title.localeCompare(b.title, 'zh-Hans-CN');
     });
 
-    refs.resultCount.textContent = '\u5171 ' + state.filtered.length + ' \u6761';
+    refs.resultCount.textContent = window.__('resultCount', lang).replace('{n}', state.filtered.length);
     renderCards(state.filtered, lang);
   }
 
@@ -438,7 +438,7 @@
       refs.loading.style.display = 'none';
       renderByRoute();
     } catch (error) {
-      showError(error && error.message ? error.message : '\u52A0\u8F7D\u5931\u8D25\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5\u3002');
+      showError(error && error.message ? error.message : window.__('errorLoad', state.lang));
     } finally {
       state.loading = false;
     }
