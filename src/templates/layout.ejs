@@ -19,11 +19,21 @@
       </a>
       <div class="header-controls">
         <button id="themeToggle" class="btn" aria-label="Toggle theme">🌙</button>
-        <select id="langSelect" class="lang-select">
-          <% uiLangs.forEach(function(l) { %>
-          <option value="<%= l %>"><%= langNames[l] || l %></option>
-          <% }) %>
-        </select>
+        <select id="langSelect" class="lang-select"></select>
+        <script>
+        (function(){
+          var names = window.__LANG_NAMES || {};
+          var langs = window.__LANGS || ['zh','en','ja'];
+          var sel = document.getElementById('langSelect');
+          if (!sel) return;
+          for (var i = 0; i < langs.length; i++) {
+            var o = document.createElement('option');
+            o.value = langs[i];
+            o.textContent = names[langs[i]] || langs[i];
+            sel.appendChild(o);
+          }
+        })();
+        </script>
       </div>
     </div>
   </header>
