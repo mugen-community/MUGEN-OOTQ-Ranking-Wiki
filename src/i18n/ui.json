@@ -49,7 +49,11 @@
     "commentsFailed": "评论加载失败",
     "noDetailDesc": "暂无详细描述",
     "filterTrigger": "启动技术",
-    "filterAttack": "攻击技术"
+    "filterAttack": "攻击技术",
+    "discussions": "讨论区",
+    "discLead": "社区讨论与问答。",
+    "discList": "讨论列表",
+    "filterTopic": "话题"
   },
   "en": {
     "siteName": "MUGEN OOTQ Wiki",
@@ -101,7 +105,11 @@
     "commentsFailed": "Failed to load comments",
     "noDetailDesc": "No description yet",
     "filterTrigger": "Trigger Techniques",
-    "filterAttack": "Attack Techniques"
+    "filterAttack": "Attack Techniques",
+    "discussions": "Discussion",
+    "discLead": "Community discussion and Q&A.",
+    "discList": "Discussion List",
+    "filterTopic": "Topic"
   },
   "ja": {
     "siteName": "MUGEN OOTQ Wiki",
@@ -153,6 +161,10 @@
     "commentsFailed": "コメントの読み込みに失敗しました",
     "noDetailDesc": "詳細説明はまだありません",
     "filterTrigger": "起動技術",
-    "filterAttack": "攻撃技術"
+    "filterAttack": "攻撃技術",
+    "discussions": "討論",
+    "discLead": "コミュニティ討論とQ&A。",
+    "discList": "討論リスト",
+    "filterTopic": "トピック"
   }
 }

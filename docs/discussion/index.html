@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discussion</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../github-markdown.css">
+  <script src="../i18n-data.js"></script>
+  <script src="../i18n.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="../" class="logo">
+        <span>🎮</span>
+        <span data-i18n="siteName">MUGEN OOTQ Wiki</span>
+      </a>
+      <div class="header-controls">
+        <button id="themeToggle" class="btn" aria-label="Toggle theme">🌙</button>
+        <select id="langSelect" class="lang-select"></select>
+        <script>
+        (function(){
+          var names = window.__LANG_NAMES || {};
+          var langs = window.__LANGS || ['zh','en','ja'];
+          var sel = document.getElementById('langSelect');
+          if (!sel) return;
+          for (var i = 0; i < langs.length; i++) {
+            var o = document.createElement('option');
+            o.value = langs[i];
+            o.textContent = names[langs[i]] || langs[i];
+            sel.appendChild(o);
+          }
+        })();
+        </script>
+      </div>
+    </div>
+  </header>
+
+  <nav class="container">
+    <div style="padding: 10px 0; border-bottom: 1px solid var(--border-color); display: flex; gap: 20px; align-items: center;">
+      <div style="flex: 1;">
+        <a href="../" data-i18n="home">首页</a>
+        <a href="../characters/" data-i18n="characters" style="margin-left: 15px;">角色</a>
+        <a href="../discussion/" data-i18n="discussions" style="margin-left: 15px;">讨论</a>
+      </div>
+      <a href="https://github.com/mugen-community/MUGEN-OOTQ-Ranking-Wiki/issues/new?template=character_submission.md" class="btn" style="padding: 6px 14px; font-size: 0.9em;" data-i18n="newEntry"><img src="../github.svg" alt="" style="height:1em;vertical-align:middle;margin-right:4px">新建</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+  <h1 data-i18n="discussions">讨论区</h1>
+  <p class="lead" data-i18n="discLead">社区讨论与问答。</p>
+</div>
+
+<section class="issue-cms-controls">
+  <div class="search-box">
+    <input id="searchInput" type="search" data-i18n-placeholder="search" placeholder="搜索...">
+  </div>
+  <div class="filter-row" id="filterRowLabels" style="display:none">
+    <label data-i18n="filterTopic">话题</label>
+    <div id="labelFilterList" class="tag-filters"></div>
+  </div>
+</section>
+
+<section id="loadingState" class="info-box" data-i18n="loading">正在加载讨论...</section>
+<section id="errorState" class="info-box" style="display:none;"></section>
+
+<section id="listView" class="section" style="display:none;">
+  <div class="section-header">
+    <h2 data-i18n="discList">讨论列表</h2>
+    <span id="resultCount" class="muted"></span>
+  </div>
+  <div id="discRowList" class="disc-row-list"></div>
+</section>
+
+<section id="detailView" class="section" style="display:none;"></section>
+
+<script>
+(() => {
+  const CONFIG = {
+    owner: 'mugen-community',
+    repo: 'MUGEN-OOTQ-Ranking-Wiki',
+    discussionLabel: 'discussion',
+    perPage: 100,
+    maxPages: 5
+  };
+
+  const state = {
+    all: null,
+    filtered: [],
+    loading: false,
+    labelFilter: new Set()
+  };
+
+  const refs = {
+    loading: document.getElementById('loadingState'),
+    error: document.getElementById('errorState'),
+    list: document.getElementById('listView'),
+    detail: document.getElementById('detailView'),
+    rowList: document.getElementById('discRowList'),
+    resultCount: document.getElementById('resultCount'),
+    search: document.getElementById('searchInput'),
+    labelList: document.getElementById('labelFilterList')
+  };
+
+  function escapeHtml(text) {
+    return String(text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function extractAllImages(body) {
+    const urls = [];
+    const htmlRe = /<img\s[^>]*src=["'](https?:\/\/[^"']+)["']/gi;
+    const mdRe = /!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/gi;
+    let m;
+    while ((m = htmlRe.exec(body || '')) !== null) urls.push(m[1]);
+    while ((m = mdRe.exec(body || '')) !== null) urls.push(m[1]);
+    return urls;
+  }
+
+  function renderMarkdown(text) {
+    const raw = String(text || '').trim();
+    if (!raw) return '';
+    const clean = raw.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/ig, '');
+    if (typeof marked !== 'undefined' && marked.parse) {
+      try { return marked.parse(clean); } catch (e) {}
+    }
+    const hasHtml = /<\/?[a-z][\s\S]*>/i.test(clean);
+    if (hasHtml) return clean;
+    return clean.split(/\n{2,}/).map(p => '<p>' + escapeHtml(p).replace(/\n/g, '<br>') + '</p>').join('');
+  }
+
+  function parseDiscussion(issue) {
+    const slug = issue.title.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '') || ('issue-' + issue.number);
+    const labels = (issue.labels || []).map(function(l) { return typeof l === 'object' ? l.name || '' : l; }).filter(Boolean);
+    const body = issue.body || '';
+    const excerpt = body.replace(/^#+\s.*$/gm, '').replace(/\n{2,}/g, ' ').replace(/\s+/g, ' ').slice(0, 200).trim();
+    const images = extractAllImages(body);
+    return {
+      id: issue.id,
+      number: issue.number,
+      slug: slug,
+      title: issue.title || ('Issue #' + issue.number),
+      body: body,
+      labels: labels,
+      excerpt: excerpt,
+      images: images,
+      issueUrl: issue.html_url,
+      user: issue.user,
+      createdAt: issue.created_at,
+      updatedAt: issue.updated_at,
+      comments: issue.comments || 0
+    };
+  }
+
+  async function fetchDiscussions() {
+    const allIssues = [];
+    for (let page = 1; page <= CONFIG.maxPages; page += 1) {
+      const url = new URL('https://api.github.com/repos/' + CONFIG.owner + '/' + CONFIG.repo + '/issues');
+      url.searchParams.set('state', 'all');
+      url.searchParams.set('labels', CONFIG.discussionLabel);
+      url.searchParams.set('per_page', String(CONFIG.perPage));
+      url.searchParams.set('page', String(page));
+      url.searchParams.set('sort', 'updated');
+      url.searchParams.set('direction', 'desc');
+      const response = await fetch(url.toString(), {
+        headers: { Accept: 'application/vnd.github+json' }
+      });
+      if (!response.ok) throw new Error('GitHub API request failed: HTTP ' + response.status);
+      const chunk = await response.json();
+      allIssues.push(...chunk.filter(item => !item.pull_request));
+      if (chunk.length < CONFIG.perPage) break;
+    }
+    return allIssues.map(parseDiscussion).filter(Boolean);
+  }
+
+  function getUniqueLabels(items) {
+    var map = {};
+    for (var i = 0; i < items.length; i++) {
+      for (var j = 0; j < items[i].labels.length; j++) {
+        var l = items[i].labels[j];
+        if (l === CONFIG.discussionLabel) continue;
+        map[l] = (map[l] || 0) + 1;
+      }
+    }
+    return Object.keys(map).sort();
+  }
+
+  function initFilters(labels) {
+    var row = document.getElementById('filterRowLabels');
+    if (!labels.length) return;
+    row.style.display = '';
+    for (var i = 0; i < labels.length; i++) {
+      (function(labelName) {
+        var labelEl = document.createElement('label');
+        labelEl.className = 'filter-check';
+        var cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = labelName;
+        labelEl.appendChild(cb);
+        var span = document.createElement('span');
+        span.className = 'filter-tag';
+        span.textContent = labelName;
+        labelEl.appendChild(span);
+        refs.labelList.appendChild(labelEl);
+      })(labels[i]);
+    }
+    refs.labelList.addEventListener('change', function(e) {
+      if (e.target.type === 'checkbox') {
+        if (e.target.checked) state.labelFilter.add(e.target.value);
+        else state.labelFilter.delete(e.target.value);
+        applyFilters();
+      }
+    });
+  }
+
+  function applyFilters() {
+    const keyword = refs.search.value.trim().toLowerCase();
+    const labelSet = state.labelFilter;
+
+    state.filtered = state.all.filter(function(item) {
+      const searchBlob = [item.title, item.excerpt, item.labels.join(' ')].join(' ').toLowerCase();
+      const keywordOk = keyword ? searchBlob.includes(keyword) : true;
+      var labelOk = labelSet.size === 0;
+      if (!labelOk) {
+        labelOk = item.labels.some(function(l) { return labelSet.has(l); });
+      }
+      return keywordOk && labelOk;
+    }).sort(function(a, b) {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+
+    refs.resultCount.textContent = window.__('resultCount', 'zh').replace('{n}', state.filtered.length);
+    renderRows(state.filtered);
+  }
+
+  function renderRows(items) {
+    refs.rowList.innerHTML = '';
+    if (!items.length) {
+      refs.rowList.innerHTML = '<div class="empty-state">' + window.__('noMatch', 'zh') + '</div>';
+      return;
+    }
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var row = document.createElement('div');
+      row.className = 'disc-row';
+      row.style.cursor = 'pointer';
+      var date = new Date(item.createdAt).toLocaleDateString('zh-CN');
+      var labelHtml = item.labels.filter(function(l) { return l !== CONFIG.discussionLabel; }).map(function(l) { return '<span class="tag">' + escapeHtml(l) + '</span>'; }).join('');
+      row.innerHTML = [
+        '<div class="disc-row-main">',
+        '<h3 class="disc-row-title">' + escapeHtml(item.title) + '</h3>',
+        labelHtml ? '<div class="disc-row-labels">' + labelHtml + '</div>' : '',
+        item.excerpt ? '<p class="disc-row-excerpt">' + escapeHtml(item.excerpt) + '</p>' : '',
+        '</div>',
+        '<div class="disc-row-meta">',
+        '<span class="disc-row-date">' + escapeHtml(date) + '</span>',
+        item.comments > 0 ? '<span class="disc-row-comments">' + item.comments + '</span>' : '',
+        '</div>'
+      ].join('');
+      row.addEventListener('click', function() { openDetail(item); });
+      fragment.appendChild(row);
+    }
+    refs.rowList.appendChild(fragment);
+  }
+
+  function renderDetail(item) {
+    var images = item.images;
+    refs.detail.innerHTML = [
+      '<div class="detail-header">',
+      '<button class="btn" id="backToList" type="button">\u2190 ' + window.__('backToList', 'zh') + '</button>',
+      '<a class="btn" href="' + escapeHtml(item.issueUrl) + '" target="_blank" rel="noopener">' + window.__('viewOnGitHub', 'zh') + ' #' + item.number + '</a>',
+      '</div>',
+      '<article class="markdown-body">',
+      '<h1 class="detail-title">' + escapeHtml(item.title) + '</h1>',
+      '<div class="detail-meta">',
+      item.labels.filter(function(l) { return l !== CONFIG.discussionLabel; }).map(function(l) { return '<span class="tag">' + escapeHtml(l) + '</span>'; }).join(''),
+      '</div>',
+      '<hr class="detail-divider">',
+      renderMarkdown(item.body),
+      '</article>',
+      '<section class="comments-section">',
+      '<h2>' + window.__('comments', 'zh') + '</h2>',
+      '<div id="commentsLoading" class="info-box">' + window.__('loadingComments', 'zh') + '</div>',
+      '<div id="commentsList"></div>',
+      '</section>'
+    ].join('');
+
+    document.getElementById('backToList').addEventListener('click', function() {
+      var url = new URL(window.location.href);
+      url.searchParams.delete('slug');
+      history.pushState({}, '', url.pathname + url.search);
+      renderByRoute();
+    });
+
+    fetchComments(item.number).then(function(comments) {
+      var loading = document.getElementById('commentsLoading');
+      var list = document.getElementById('commentsList');
+      if (loading) loading.style.display = 'none';
+      if (!comments.length) {
+        list.innerHTML = '<p class="muted">' + window.__('noComments', 'zh') + '<a href="' + escapeHtml(item.issueUrl) + '" target="_blank" rel="noopener">' + window.__('viewOnGitHub', 'zh') + '</a></p>';
+        return;
+      }
+      list.innerHTML = comments.map(renderComment).join('');
+    }).catch(function() {
+      var loading = document.getElementById('commentsLoading');
+      var list = document.getElementById('commentsList');
+      if (loading) loading.style.display = 'none';
+      list.innerHTML = '<p class="muted">' + window.__('commentsFailed', 'zh') + '</p>';
+    });
+  }
+
+  function fetchComments(issueNumber) {
+    var url = 'https://api.github.com/repos/' + CONFIG.owner + '/' + CONFIG.repo + '/issues/' + issueNumber + '/comments?per_page=100';
+    return fetch(url, { headers: { Accept: 'application/vnd.github+json' } }).then(function(r) { return r.ok ? r.json() : []; });
+  }
+
+  function renderComment(comment) {
+    var body = renderMarkdown(comment.body);
+    var date = new Date(comment.created_at).toLocaleDateString('zh-CN');
+    return [
+      '<div class="comment-item">',
+      '<div class="comment-header">',
+      '<img class="comment-avatar" src="' + escapeHtml(comment.user.avatar_url) + '" alt="' + escapeHtml(comment.user.login) + '">',
+      '<a class="comment-author" href="' + escapeHtml(comment.user.html_url) + '" target="_blank" rel="noopener">' + escapeHtml(comment.user.login) + '</a>',
+      '<span class="comment-date">' + escapeHtml(date) + '</span>',
+      '</div>',
+      '<div class="comment-body markdown-body">' + body + '</div>',
+      '</div>'
+    ].join('');
+  }
+
+  function openDetail(item) {
+    var url = new URL(window.location.href);
+    url.searchParams.set('slug', item.slug);
+    history.pushState({}, '', url.pathname + url.search);
+    renderByRoute();
+  }
+
+  function renderByRoute() {
+    if (!state.all) return;
+    var slug = new URLSearchParams(window.location.search).get('slug');
+    if (slug) {
+      var match = state.all.find(function(item) { return item.slug === slug; });
+      if (match) {
+        refs.list.style.display = 'none';
+        refs.detail.style.display = 'block';
+        renderDetail(match);
+        return;
+      }
+    }
+    refs.detail.style.display = 'none';
+    refs.list.style.display = 'block';
+    applyFilters();
+  }
+
+  function showError(msg) {
+    refs.loading.style.display = 'none';
+    refs.list.style.display = 'none';
+    refs.detail.style.display = 'none';
+    refs.error.style.display = 'block';
+    refs.error.textContent = msg;
+  }
+
+  async function bootstrap() {
+    if (state.loading) return;
+    state.loading = true;
+    refs.loading.style.display = 'block';
+    refs.error.style.display = 'none';
+    try {
+      state.all = await fetchDiscussions();
+      var labels = getUniqueLabels(state.all);
+      initFilters(labels);
+      refs.loading.style.display = 'none';
+      renderByRoute();
+    } catch (error) {
+      showError(error && error.message ? error.message : window.__('errorLoad', 'zh'));
+    } finally {
+      state.loading = false;
+    }
+  }
+
+  refs.search.addEventListener('input', function() { applyFilters(); });
+  window.addEventListener('popstate', renderByRoute);
+
+  bootstrap();
+})();
+</script>
+
+<style>
+.disc-row-list { display: flex; flex-direction: column; gap: 0; }
+.disc-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px; border-bottom: 1px solid var(--border-color);
+  gap: 16px;
+}
+.disc-row:hover { background: var(--bg-card); }
+.disc-row-main { flex: 1; min-width: 0; }
+.disc-row-title { margin: 0 0 4px; font-size: 1em; font-weight: 600; }
+.disc-row-labels { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 4px; }
+.disc-row-labels .tag { font-size: 0.78em; padding: 1px 6px; }
+.disc-row-excerpt { margin: 0; font-size: 0.85em; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.disc-row-meta { flex-shrink: 0; text-align: right; font-size: 0.82em; color: var(--text-secondary); }
+.disc-row-comments::before { content: "\1F4AC "; }
+</style>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p data-i18n="footer">&copy; 2026 MUGEN OOTQ Ranking Wiki</p>
+    </div>
+  </footer>
+</body>
+</html>
