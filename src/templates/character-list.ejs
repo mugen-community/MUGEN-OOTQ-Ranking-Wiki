@@ -555,7 +555,9 @@
 
 <style>
 .issue-cms-controls { margin: 10px 0 20px; }
-.filter-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.filter-row { display: flex; flex-direction: column; gap: 6px; }
+.filter-row > label { font-weight: 600; font-size: 0.9em; }
+.issue-cms-controls > .filter-row:first-of-type { flex-direction: row; align-items: center; gap: 10px; flex-wrap: wrap; }
 .muted { color: var(--text-secondary); }
 
 .issue-card { display: flex; flex-direction: column; }
@@ -585,15 +587,19 @@
 .comment-body { font-size: 0.94em; }
 .empty { color: var(--text-secondary); font-style: italic; }
 
-.tag-filters { display: flex; gap: 6px; flex-wrap: wrap; }
-.filter-check { display: inline-flex; align-items: center; gap: 3px; cursor: pointer; font-size: 0.88em; }
-.filter-check input { margin: 0; }
-.filter-tag {
-  display: inline-block; padding: 2px 8px; border-radius: 4px;
-  background: var(--bg-card); border: 1px solid var(--border-color);
-  font-size: 0.88em;
+.issue-cms-controls .tag-filters {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
 }
-.filter-check input:checked + .filter-tag {
+.issue-cms-controls .filter-check {
+  display: inline-flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.88em; white-space: nowrap;
+}
+.issue-cms-controls .filter-check input[type=checkbox] { margin: 0; }
+.issue-cms-controls .filter-tag {
+  display: inline-block; padding: 3px 10px; border-radius: 4px;
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  font-size: 0.88em; line-height: 1.4;
+}
+.issue-cms-controls .filter-check input[type=checkbox]:checked + .filter-tag {
   background: var(--accent); color: var(--bg); border-color: var(--accent);
 }
 </style>
