@@ -71,6 +71,14 @@
     </select>
     <button id="reloadBtn" class="btn" type="button" data-i18n="reload">刷新</button>
   </div>
+  <div class="filter-row" id="filterRowTrigger" style="display:none">
+    <label data-i18n="filterTrigger">启动技术</label>
+    <div id="triggerFilterList" class="tag-filters"></div>
+  </div>
+  <div class="filter-row" id="filterRowAttack" style="display:none">
+    <label data-i18n="filterAttack">攻击技术</label>
+    <div id="attackFilterList" class="tag-filters"></div>
+  </div>
 </section>
 
 <section id="loadingState" class="info-box" data-i18n="loading">正在从 GitHub 拉取角色数据...</section>
@@ -109,7 +117,9 @@
     tagIndex: null,
     tierKeys: null,
     loading: false,
-    lang: defaultLang
+    lang: defaultLang,
+    triggerFilter: new Set(),
+    attackFilter: new Set()
   };
 
   const refs = {
@@ -121,7 +131,9 @@
     resultCount: document.getElementById('resultCount'),
     search: document.getElementById('searchInput'),
     tier: document.getElementById('tierFilter'),
-    reload: document.getElementById('reloadBtn')
+    reload: document.getElementById('reloadBtn'),
+    triggerList: document.getElementById('triggerFilterList'),
+    attackList: document.getElementById('attackFilterList')
   };
 
   function getLang() {
@@ -271,6 +283,43 @@
       tier: defaultTier,
       level: defaultLevel
     };
+  }
+
+  function initFilters() {
+    var cats = [
+      { list: refs.triggerList, cat: 'trigger_technique', key: 'triggerFilter', row: document.getElementById('filterRowTrigger') },
+      { list: refs.attackList, cat: 'attack_technique', key: 'attackFilter', row: document.getElementById('filterRowAttack') }
+    ];
+    for (var f = 0; f < cats.length; f++) {
+      var c = cats[f];
+      var entries = TAG_SYSTEM[c.cat];
+      if (!entries) continue;
+      var keys = Object.keys(entries);
+      if (!keys.length) continue;
+      c.row.style.display = '';
+      for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        var label = document.createElement('label');
+        label.className = 'filter-check';
+        var cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = k;
+        cb.addEventListener('change', (function(catKey, key) {
+          return function() {
+            var s = state[catKey];
+            if (this.checked) s.add(key); else s.delete(key);
+            applyFilters(state.lang);
+          };
+        })(c.key, k));
+        label.appendChild(cb);
+        label.appendChild(document.createTextNode(' '));
+        var span = document.createElement('span');
+        span.className = 'filter-tag';
+        span.textContent = tagLabel({ key: k, category: c.cat }, state.lang);
+        label.appendChild(span);
+        c.list.appendChild(label);
+      }
+    }
   }
 
   async function fetchCharacters() {
@@ -442,9 +491,19 @@
     renderByRoute();
   }
 
+  function hasTag(item, category, key, lang) {
+    var tags = item.tagsByLang[lang] || item.tagsByLang[defaultLang] || [];
+    for (var i = 0; i < tags.length; i++) {
+      if (tags[i].category === category && tags[i].key === key) return true;
+    }
+    return false;
+  }
+
   function applyFilters(lang) {
     const keyword = refs.search.value.trim().toLowerCase();
     const tierFilter = refs.tier.value;
+    const trigSet = state.triggerFilter;
+    const attSet = state.attackFilter;
 
     state.filtered = state.all.filter(item => {
       const tags = item.tagsByLang[lang] || item.tagsByLang[defaultLang] || [];
@@ -452,7 +511,15 @@
       const searchBlob = [item.slug, item.title, tagTexts].join(' ').toLowerCase();
       const tierOk = tierFilter === 'all' || item.tier === tierFilter;
       const keywordOk = keyword ? searchBlob.includes(keyword) : true;
-      return tierOk && keywordOk;
+      var trigOk = trigSet.size === 0;
+      if (!trigOk) {
+        trigOk = tags.some(function(t) { return t.category === 'trigger_technique' && trigSet.has(t.key); });
+      }
+      var attOk = attSet.size === 0;
+      if (!attOk) {
+        attOk = tags.some(function(t) { return (t.category === 'attack_technique' || t.category === 'effect_technique') && attSet.has(t.key); });
+      }
+      return tierOk && keywordOk && trigOk && attOk;
     }).sort((a, b) => {
       if (tierOrder[a.tier] !== tierOrder[b.tier]) return tierOrder[a.tier] - tierOrder[b.tier];
       return a.title.localeCompare(b.title, lang);
@@ -495,6 +562,7 @@
     refs.error.style.display = 'none';
     try {
       state.all = await fetchCharacters();
+      initFilters();
       refs.loading.style.display = 'none';
       renderByRoute();
     } catch (error) {
@@ -504,12 +572,32 @@
     }
   }
 
+  function updateFilterLabels(lang) {
+    var containers = [
+      { list: refs.triggerList, cat: 'trigger_technique' },
+      { list: refs.attackList, cat: 'attack_technique' }
+    ];
+    for (var f = 0; f < containers.length; f++) {
+      var labels = containers[f].list.querySelectorAll('.filter-check');
+      for (var i = 0; i < labels.length; i++) {
+        var cb = labels[i].querySelector('input');
+        var span = labels[i].querySelector('.filter-tag');
+        if (cb && span) {
+          span.textContent = tagLabel({ key: cb.value, category: containers[f].cat }, lang);
+        }
+      }
+    }
+  }
+
   refs.search.addEventListener('input', () => applyFilters(state.lang));
   refs.tier.addEventListener('change', () => applyFilters(state.lang));
   refs.reload.addEventListener('click', bootstrap);
   document.getElementById('langSelect')?.addEventListener('change', function () {
     setLang(this.value);
-    if (state.all) renderByRoute();
+    if (state.all) {
+      updateFilterLabels(state.lang);
+      renderByRoute();
+    }
   });
   window.addEventListener('popstate', renderByRoute);
 
@@ -548,6 +636,18 @@
 .comment-date { color: var(--text-secondary); font-size: 0.82em; }
 .comment-body { font-size: 0.94em; }
 .empty { color: var(--text-secondary); font-style: italic; }
+
+.tag-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.filter-check { display: inline-flex; align-items: center; gap: 3px; cursor: pointer; font-size: 0.88em; }
+.filter-check input { margin: 0; }
+.filter-tag {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  font-size: 0.88em;
+}
+.filter-check input:checked + .filter-tag {
+  background: var(--accent); color: var(--bg); border-color: var(--accent);
+}
 </style>
 
   </main>
