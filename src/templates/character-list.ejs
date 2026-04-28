@@ -341,7 +341,6 @@
         '<h3>' + escapeHtml(item.title) + '</h3>',
         levelText ? '<span class="ootq-badge ootq-' + tierClass(item.tier) + '">' + escapeHtml(levelText) + '</span>' : '',
         '</div>',
-        (item.summaryByLang[lang] || item.summaryByLang[defaultLang]) ? '<p class="issue-summary">' + escapeHtml(item.summaryByLang[lang] || item.summaryByLang[defaultLang]) + '</p>' : '',
         tags.length ? '<div class="tags">' + tags.slice(0, 6).map(t => '<span class="tag">' + escapeHtml(tagLabel(t, lang)) + '</span>').join('') + '</div>' : ''
       ].join('');
       card.addEventListener('click', () => openDetail(item.slug));
