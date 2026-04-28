@@ -15,6 +15,10 @@
   --link-visited: #795cb2;
   --header-bg: #ffffff;
   --shadow: 0 2px 8px rgba(0,0,0,0.1);
+  --filter-bg: #e8f0fe;
+  --filter-border: #c6d9f1;
+  --filter-active-bg: #1a73e8;
+  --filter-active-text: #ffffff;
 }
 
 [data-theme="dark"] {
@@ -28,6 +32,10 @@
   --link-visited: #9a7fc4;
   --header-bg: #2d2d30;
   --shadow: 0 2px 8px rgba(0,0,0,0.4);
+  --filter-bg: #2a2a3a;
+  --filter-border: #444466;
+  --filter-active-bg: #4da3ff;
+  --filter-active-text: #000000;
 }
 
 body {
