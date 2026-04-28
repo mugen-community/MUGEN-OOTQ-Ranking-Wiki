@@ -94,12 +94,12 @@
     "StateDef_Overflow_Trigger": {
       "zh": "StateDef溢出启动",
       "en": "StateDef Overflow Trigger",
-      "ja": "StateDefオーバーフロー起動"
-    },
-    "State_Overflow_Trigger": {
-      "zh": "S溢出启动",
-      "en": "State Overflow Trigger",
-      "ja": "Stateオーバーフロー起動"
+      "ja": "StateDefオーバーフロー起動",
+      "_alias": {
+        "zh": "S溢出启动",
+        "en": "State Overflow Trigger",
+        "ja": "Stateオーバーフロー起動"
+      }
     },
     "DEF_Overflow_Trigger": {
       "zh": "DEF溢出启动",
@@ -139,14 +139,14 @@
   },
 
   "attack_technique": {
-    "DTC_Fabrication_Attack": {
+    "DTC_Parent_Attack": {
       "zh": "DTC型亲捏造",
-      "en": "DTC-Type Fabrication Attack",
+      "en": "DTC-Type Parent Attack",
       "ja": "DTC型親捏造"
     },
-    "Variable_Expansion_Fabrication_Attack": {
+    "Variable_Expansion_Parent_Attack": {
       "zh": "变量扩张型亲捏造",
-      "en": "Variable Expansion Fabrication Attack",
+      "en": "Variable Expansion Parent Attack",
       "ja": "変数拡張型親捏造"
     },
     "API_Source_Injection_Attack": {
@@ -155,8 +155,8 @@
       "ja": "APIソース注入攻撃"
     },
     "MultiThreaded_API_Attack": {
-      "zh": "多线程API攻击",
-      "en": "Multi-threaded API Attack",
+      "zh": "多线程API",
+      "en": "API Attack Multi-threaded",
       "ja": "マルチスレッドAPI攻撃"
     }
   },
@@ -195,7 +195,7 @@
     "Forced_Time_Stop": {
       "zh": "强制时停",
       "en": "Forced Time Stop",
-      "ja": "強制時間停止"
+      "ja": "強制時止"
     },
     "Invincibility_Removal": {
       "zh": "无敌解除",
@@ -208,9 +208,9 @@
       "ja": "NOKO解除"
     },
     "Life_Manipulation": {
-      "zh": "生命值操作",
+      "zh": "血量操作",
       "en": "Life Manipulation",
-      "ja": "ライフ操作"
+      "ja": "Life弄"
     },
     "CNS_Pointer_Manipulation": {
       "zh": "CNS指针操作",
@@ -220,27 +220,27 @@
     "Round_Timer_Manipulation": {
       "zh": "回合计时器操作",
       "en": "Round Timer Manipulation",
-      "ja": "ラウンドタイマー操作"
+      "ja": "ラウンドタイマー弄"
     },
     "Round_State_Manipulation": {
-      "zh": "回合状态操作",
+      "zh": "RoundState操作",
       "en": "Roundstate Manipulation",
-      "ja": "RoundState操作"
+      "ja": "RoundState弄"
     },
     "Palette_Manipulation": {
       "zh": "调色板操作",
       "en": "PalNo Manipulation",
-      "ja": "PalNo操作"
+      "ja": "PalNo弄"
     },
     "Intro_Removal": {
       "zh": "开场解除",
       "en": "Intro Removal",
-      "ja": "イントロ削除"
+      "ja": "イントロ解除"
     },
     "Timer_Freeze_Removal": {
-      "zh": "计时冻结解除",
-      "en": "Timer Freeze Removal",
-      "ja": "TimerFreeze解除"
+      "zh": "冻结解除",
+      "en": "Freeze Removal",
+      "ja": "Freeze解除"
     },
     "DEF_Protection": {
       "zh": "DEF保护",
@@ -260,7 +260,7 @@
     "Resurrection": {
       "zh": "复活",
       "en": "Resurrection",
-      "ja": "復活"
+      "ja": "蘇生"
     }
   }
 }
