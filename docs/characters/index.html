@@ -59,17 +59,16 @@
   <div class="search-box">
     <input id="searchInput" type="search" data-i18n-placeholder="search" placeholder="按角色名、标签搜索...">
   </div>
-  <div class="filter-row">
-    <label for="tierFilter" data-i18n="tierFilter">分级</label>
-    <select id="tierFilter" class="lang-select">
-      <option value="all" data-i18n="tierAll">全部</option>
-      <option value="top" data-i18n="tierTop">论外最上位</option>
-      <option value="high" data-i18n="tierHigh">论外上位</option>
-      <option value="mid" data-i18n="tierMid">论外中位</option>
-      <option value="low" data-i18n="tierLow">论外下位</option>
-      <option value="unknown" data-i18n="tierUnknown">未标注</option>
-    </select>
-    <button id="reloadBtn" class="btn" type="button" data-i18n="reload">刷新</button>
+  <div class="filter-row" id="filterRowTier">
+    <label data-i18n="tierFilter">分级</label>
+    <div class="tag-filters">
+      <label class="filter-check"><input type="radio" name="tierGroup" value="all" checked><span class="filter-tag" data-i18n="tierAll">全部</span></label>
+      <label class="filter-check"><input type="radio" name="tierGroup" value="top"><span class="filter-tag" data-i18n="tierTop">论外最上位</span></label>
+      <label class="filter-check"><input type="radio" name="tierGroup" value="high"><span class="filter-tag" data-i18n="tierHigh">论外上位</span></label>
+      <label class="filter-check"><input type="radio" name="tierGroup" value="mid"><span class="filter-tag" data-i18n="tierMid">论外中位</span></label>
+      <label class="filter-check"><input type="radio" name="tierGroup" value="low"><span class="filter-tag" data-i18n="tierLow">论外下位</span></label>
+      <label class="filter-check"><input type="radio" name="tierGroup" value="unknown"><span class="filter-tag" data-i18n="tierUnknown">未标注</span></label>
+    </div>
   </div>
   <div class="filter-row" id="filterRowTrigger" style="display:none">
     <label data-i18n="filterTrigger">启动技术</label>
@@ -162,8 +161,6 @@
     cardGrid: document.getElementById('cardGrid'),
     resultCount: document.getElementById('resultCount'),
     search: document.getElementById('searchInput'),
-    tier: document.getElementById('tierFilter'),
-    reload: document.getElementById('reloadBtn'),
     triggerList: document.getElementById('triggerFilterList'),
     attackList: document.getElementById('attackFilterList')
   };
@@ -516,9 +513,14 @@
     return false;
   }
 
+  function getTierFilter() {
+    var el = document.querySelector('input[name=tierGroup]:checked');
+    return el ? el.value : 'all';
+  }
+
   function applyFilters(lang) {
     const keyword = refs.search.value.trim().toLowerCase();
-    const tierFilter = refs.tier.value;
+    const tierFilter = getTierFilter();
     const trigSet = state.triggerFilter;
     const attSet = state.attackFilter;
 
@@ -603,8 +605,9 @@
   }
 
   refs.search.addEventListener('input', () => applyFilters(state.lang));
-  refs.tier.addEventListener('change', () => applyFilters(state.lang));
-  refs.reload.addEventListener('click', bootstrap);
+  document.getElementById('filterRowTier').addEventListener('change', function(e) {
+    if (e.target.type === 'radio') applyFilters(state.lang);
+  });
   document.getElementById('langSelect')?.addEventListener('change', function () {
     setLang(this.value);
     if (state.all) {
@@ -658,13 +661,15 @@
 .issue-cms-controls .filter-check {
   display: inline-flex; align-items: center; gap: 4px; cursor: pointer; font-size: 0.88em; white-space: nowrap;
 }
-.issue-cms-controls .filter-check input[type=checkbox] { margin: 0; }
+.issue-cms-controls .filter-check input[type=checkbox],
+.issue-cms-controls .filter-check input[type=radio] { margin: 0; display: none; }
 .issue-cms-controls .filter-tag {
   display: inline-block; padding: 3px 10px; border-radius: 4px;
   background: var(--bg-card); border: 1px solid var(--border-color);
   font-size: 0.88em; line-height: 1.4;
 }
-.issue-cms-controls .filter-check input[type=checkbox]:checked + .filter-tag {
+.issue-cms-controls .filter-check input[type=checkbox]:checked + .filter-tag,
+.issue-cms-controls .filter-check input[type=radio]:checked + .filter-tag {
   background: var(--accent); color: var(--bg); border-color: var(--accent);
 }
 </style>
